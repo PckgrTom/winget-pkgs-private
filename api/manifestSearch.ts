@@ -19,8 +19,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   console.log(`Inclusions: ${JSON.stringify(Inclusions, null, 0)}`);
   console.log(`Filters: ${JSON.stringify(Filters, null, 0)}`);
 
+  let [hostHead,] = process.env.PGHOST!.split(".");
+
   const db = createKysely<Database>({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: process.env.DATABASE_URL!.replace(hostHead, `${hostHead}-pooler`),
   });
   const query = db.selectFrom("packages").selectAll();
 
