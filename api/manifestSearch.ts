@@ -19,21 +19,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   console.log(`Inclusions: ${JSON.stringify(Inclusions, null, 0)}`);
   console.log(`Filters: ${JSON.stringify(Filters, null, 0)}`);
 
-  let [hostHead,] = process.env.PGHOST!.split(".");
+  let [hostHead] = process.env.PGHOST!.split(".");
 
   const db = createKysely<Database>({
-    connectionString: process.env.DATABASE_URL!.replace(hostHead, `${hostHead}-pooler`),
+    connectionString: process.env.DATABASE_URL!.replace(
+      hostHead,
+      `${hostHead}-pooler`
+    ),
   });
   let query = db.selectFrom("packages").selectAll();
 
-  if (Query.MatchType === "Exact") {
-    query = query.where("PackageIdentifier", "=", Query.KeyWord);
-  } else if (Query.MatchType === "CaseInsensitive") {
-    query = query.where("PackageIdentifier", "ilike", Query.KeyWord);
-  } else if (Query.MatchType === "StartsWith") {
-    query = query.where("PackageIdentifier", "ilike", `${Query.KeyWord}%`);
-  } else {
-    query = query.where("PackageIdentifier", "ilike", `%${Query.KeyWord}%`);
+  if (Query) {
+    if (Query.MatchType === "Exact") {
+      query = query.where("PackageIdentifier", "=", Query.KeyWord);
+    } else if (Query.MatchType === "CaseInsensitive") {
+      query = query.where("PackageIdentifier", "ilike", Query.KeyWord);
+    } else if (Query.MatchType === "StartsWith") {
+      query = query.where("PackageIdentifier", "ilike", `${Query.KeyWord}%`);
+    } else {
+      query = query.where("PackageIdentifier", "ilike", `%${Query.KeyWord}%`);
+    }
   }
 
   // combine both Inclusions and Filters into a single array
@@ -75,7 +80,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           break;
         case "Tag":
           // note: it is "Tags" not "Tag"
-          query = query.where("Tags", "@>", [inclusionOrFilter.RequestMatch.KeyWord]);
+          query = query.where("Tags", "@>", [
+            inclusionOrFilter.RequestMatch.KeyWord,
+          ]);
           break;
         case "PackageFamilyName":
           query = query.where("PackageFamilyName", "@>", [
