@@ -24,16 +24,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const db = createKysely<Database>({
     connectionString: process.env.DATABASE_URL!.replace(hostHead, `${hostHead}-pooler`),
   });
-  const query = db.selectFrom("packages").selectAll();
+  let query = db.selectFrom("packages").selectAll();
 
   if (Query.MatchType === "Exact") {
-    query.where("PackageIdentifier", "=", Query.KeyWord);
+    query = query.where("PackageIdentifier", "=", Query.KeyWord);
   } else if (Query.MatchType === "CaseInsensitive") {
-    query.where("PackageIdentifier", "ilike", Query.KeyWord);
+    query = query.where("PackageIdentifier", "ilike", Query.KeyWord);
   } else if (Query.MatchType === "StartsWith") {
-    query.where("PackageIdentifier", "ilike", `${Query.KeyWord}%`);
+    query = query.where("PackageIdentifier", "ilike", `${Query.KeyWord}%`);
   } else {
-    query.where("PackageIdentifier", "ilike", `%${Query.KeyWord}%`);
+    query = query.where("PackageIdentifier", "ilike", `%${Query.KeyWord}%`);
   }
 
   // combine both Inclusions and Filters into a single array
@@ -51,7 +51,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       inclusionOrFilter.PackageMatchField ===
       "NormalizedPackageNameAndPublisher"
     ) {
-      query.where((eb) =>
+      query = query.where((eb) =>
         eb.or([
           eb(
             "PackageName",
@@ -69,27 +69,27 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       switch (inclusionOrFilter.PackageMatchField) {
         case "Command":
           // note: it is "Commands" not "Command"
-          query.where("Commands", "@>", [
+          query = query.where("Commands", "@>", [
             inclusionOrFilter.RequestMatch.KeyWord,
           ]);
           break;
         case "Tag":
           // note: it is "Tags" not "Tag"
-          query.where("Tags", "@>", [inclusionOrFilter.RequestMatch.KeyWord]);
+          query = query.where("Tags", "@>", [inclusionOrFilter.RequestMatch.KeyWord]);
           break;
         case "PackageFamilyName":
-          query.where("PackageFamilyName", "@>", [
+          query = query.where("PackageFamilyName", "@>", [
             inclusionOrFilter.RequestMatch.KeyWord,
           ]);
           break;
         case "ProductCode":
-          query.where("ProductCode", "@>", [
+          query = query.where("ProductCode", "@>", [
             inclusionOrFilter.RequestMatch.KeyWord,
           ]);
           break;
         default:
           if (inclusionOrFilter.RequestMatch.MatchType === "Exact") {
-            query.where(
+            query = query.where(
               inclusionOrFilter.PackageMatchField,
               "=",
               inclusionOrFilter.RequestMatch.KeyWord
@@ -97,7 +97,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           } else if (
             inclusionOrFilter.RequestMatch.MatchType === "CaseInsensitive"
           ) {
-            query.where(
+            query = query.where(
               inclusionOrFilter.PackageMatchField,
               "ilike",
               inclusionOrFilter.RequestMatch.KeyWord
@@ -105,13 +105,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           } else if (
             inclusionOrFilter.RequestMatch.MatchType === "StartsWith"
           ) {
-            query.where(
+            query = query.where(
               inclusionOrFilter.PackageMatchField,
               "ilike",
               `${inclusionOrFilter.RequestMatch.KeyWord}%`
             );
           } else {
-            query.where(
+            query = query.where(
               inclusionOrFilter.PackageMatchField,
               "ilike",
               `%${inclusionOrFilter.RequestMatch.KeyWord}%`
@@ -123,7 +123,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   if (req.body.MaxiumumResults) {
-    query.limit(req.body.MaxiumumResults);
+    query = query.limit(req.body.MaxiumumResults);
   }
 
   // execute the query and return the results
