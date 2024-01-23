@@ -79,28 +79,38 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           switch (inclusionOrFilter.PackageMatchField) {
             case "Command":
               ors.push(
-                // note: it is "Commands" not "Command"
-                eb("Commands", "@>", [inclusionOrFilter.RequestMatch.KeyWord])
+                eb(
+                  eb.val(inclusionOrFilter.RequestMatch.KeyWord),
+                  "=",
+                  eb.fn.any("Commands") // note: it is "Commands" not "Command"
+                )
               );
               break;
             case "Tag":
               ors.push(
-                // note: it is "Tags" not "Tag"
-                eb("Tags", "@>", [inclusionOrFilter.RequestMatch.KeyWord])
+                eb(
+                  eb.val(inclusionOrFilter.RequestMatch.KeyWord),
+                  "=",
+                  eb.fn.any("Tags") // note: it is "Tags" not "Tag"
+                )
               );
               break;
             case "PackageFamilyName":
               ors.push(
-                eb("PackageFamilyName", "@>", [
-                  inclusionOrFilter.RequestMatch.KeyWord,
-                ])
+                eb(
+                  eb.val(inclusionOrFilter.RequestMatch.KeyWord),
+                  "=",
+                  eb.fn.any("PackageFamilyName")
+                )
               );
               break;
             case "ProductCode":
               ors.push(
-                eb("ProductCode", "@>", [
-                  inclusionOrFilter.RequestMatch.KeyWord,
-                ])
+                eb(
+                  eb.val(inclusionOrFilter.RequestMatch.KeyWord),
+                  "=",
+                  eb.fn.any("ProductCode")
+                )
               );
               break;
             default:
