@@ -1,0 +1,21 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "functions": {
+    "api/*": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/packageManifests/:package_identifier",
+      "destination": "/api/packageManifests"
+    }
+  ],
+  "public": false,
+  "github": {
+    "autoJobCancelation": true
+  },
+  "trailingSlash": false
+}
