@@ -1,0 +1,285 @@
+[
+  {
+    "PackageVersion": "0.77.0",
+    "PackageIdentifier": "Microsoft.PowerToys",
+    "Tags": [
+      "colorpicker",
+      "fancyzones",
+      "fileexplorer",
+      "imageresizer",
+      "keyboardmanager",
+      "power-toys",
+      "powerrename",
+      "powertoys",
+      "powertoys-run",
+      "windows-key-shortcut-guide"
+    ],
+    "Commands": null,
+    "Publisher": "Microsoft Corporation",
+    "ProductCode": null,
+    "PackageFamilyName": null,
+    "PackageName": "PowerToys (Preview)",
+    "Moniker": "powertoys"
+  },
+  {
+    "PackageVersion": "1.21.6",
+    "PackageIdentifier": "GoLang.Go",
+    "Tags": [
+      "go",
+      "golang",
+      "language",
+      "programming"
+    ],
+    "Commands": [
+      "go"
+    ],
+    "Publisher": "https://golang.org",
+    "ProductCode": [
+      "{E467BDEC-9AC3-4EC1-A5F9-FE5E77C2A826}",
+      "{07B16B94-BFEF-45D8-8E52-D26AF5DB4520}",
+      "{0AA2E1C5-64EC-4207-948F-29C167DDF63C}"
+    ],
+    "PackageFamilyName": null,
+    "PackageName": "Go Programming Language",
+    "Moniker": "go"
+  },
+  {
+    "PackageVersion": "7.4.1.0",
+    "PackageIdentifier": "Microsoft.PowerShell",
+    "Tags": [
+      "command-line",
+      "cross-platform",
+      "open-source",
+      "powershell",
+      "pwsh",
+      "shell"
+    ],
+    "Commands": [
+      "pwsh"
+    ],
+    "Publisher": "Microsoft Corporation",
+    "ProductCode": [
+      "{B06D1894-3827-4E0C-A092-7DC50BE8B210}",
+      "{E2A3B64A-1B09-4479-A224-8E4A6090B5B6}"
+    ],
+    "PackageFamilyName": [
+      "Microsoft.PowerShell_8wekyb3d8bbwe"
+    ],
+    "PackageName": "PowerShell",
+    "Moniker": "pwsh"
+  },
+  {
+    "PackageVersion": "120.0.6099.5",
+    "PackageIdentifier": "Google.Chrome.Beta",
+    "Tags": [
+      "browser",
+      "chromium",
+      "internet",
+      "web",
+      "webpage"
+    ],
+    "Commands": [
+      "chrome"
+    ],
+    "Publisher": "Google LLC",
+    "ProductCode": [
+      "{CE1E0037-D106-3266-B7EA-617C47C68CCF}",
+      "{C111388F-E095-3FA8-8B12-49B9FBBF6ADB}"
+    ],
+    "PackageFamilyName": null,
+    "PackageName": "Google Chrome Beta",
+    "Moniker": null
+  },
+  {
+    "PackageVersion": "2.42.1",
+    "PackageIdentifier": "GitHub.cli",
+    "Tags": [
+      "cli",
+      "command-line",
+      "foss",
+      "open-source",
+      "tool",
+      "utility"
+    ],
+    "Commands": [
+      "gh"
+    ],
+    "Publisher": "GitHub, Inc.",
+    "ProductCode": [
+      "{3A39A10B-51BA-42A1-921B-DC9D2F235C0E}"
+    ],
+    "PackageFamilyName": null,
+    "PackageName": "GitHub CLI",
+    "Moniker": "gh"
+  },
+  {
+    "PackageVersion": "2.43.0",
+    "PackageIdentifier": "Git.Git",
+    "Tags": [
+      "cli",
+      "command-line",
+      "commandline",
+      "cross-platform",
+      "dvcs",
+      "foss",
+      "open-source",
+      "tool",
+      "utility",
+      "vcs"
+    ],
+    "Commands": [
+      "git"
+    ],
+    "Publisher": "The Git Development Community",
+    "ProductCode": null,
+    "PackageFamilyName": null,
+    "PackageName": "Git",
+    "Moniker": "git"
+  },
+  {
+    "PackageVersion": "2023.1.1.26",
+    "PackageIdentifier": "Google.AndroidStudio",
+    "Tags": [
+      "aab",
+      "adb",
+      "android-development",
+      "apk",
+      "fastboot",
+      "ide",
+      "intellij",
+      "studio"
+    ],
+    "Commands": null,
+    "Publisher": "Google LLC",
+    "ProductCode": null,
+    "PackageFamilyName": null,
+    "PackageName": "Android Studio",
+    "Moniker": "android-studio"
+  },
+  {
+    "PackageVersion": "120.0.6099.225",
+    "PackageIdentifier": "Google.Chrome",
+    "Tags": [
+      "browser",
+      "chromium",
+      "internet",
+      "web",
+      "webpage"
+    ],
+    "Commands": null,
+    "Publisher": "Google LLC",
+    "ProductCode": [
+      "{65DBDBC9-731E-31B9-9643-39BABB83054B}",
+      "{E5A0A728-F1C0-3C28-8D09-840E46698133}"
+    ],
+    "PackageFamilyName": null,
+    "PackageName": "Google Chrome",
+    "Moniker": "chrome"
+  },
+  {
+    "PackageVersion": "2023.1.1.25",
+    "PackageIdentifier": "Google.AndroidStudio.Beta",
+    "Tags": [
+      "aab",
+      "adb",
+      "android-development",
+      "apk",
+      "beta",
+      "fastboot",
+      "ide",
+      "intellij",
+      "studio"
+    ],
+    "Commands": null,
+    "Publisher": "Google LLC",
+    "ProductCode": null,
+    "PackageFamilyName": null,
+    "PackageName": "Android Studio Beta",
+    "Moniker": "android-studio-beta"
+  },
+  {
+    "PackageVersion": "3.12.1",
+    "PackageIdentifier": "Python.Python.3.12",
+    "Tags": [
+      "language",
+      "programming",
+      "programming-language",
+      "python",
+      "python3",
+      "script"
+    ],
+    "Commands": [
+      "py",
+      "python",
+      "pythonw",
+      "pyw"
+    ],
+    "Publisher": "Python Software Foundation",
+    "ProductCode": [
+      "{4a34e154-5d3b-414e-8ef4-045ebdf0f740}",
+      "{86e52725-ef45-452f-ac4c-b8958718bfea}",
+      "{d7476f2e-5be6-4659-9d10-41625075ad24}"
+    ],
+    "PackageFamilyName": null,
+    "PackageName": "Python 3.12",
+    "Moniker": "python3"
+  },
+  {
+    "PackageVersion": "6.5.2",
+    "PackageIdentifier": "dev47apps.DroidCam",
+    "Tags": [
+      "droidcam",
+      "camera",
+      "microphone"
+    ],
+    "Commands": null,
+    "Publisher": "DEV47APPS",
+    "ProductCode": null,
+    "PackageFamilyName": null,
+    "PackageName": "DroidCam Client",
+    "Moniker": "droidcam-client"
+  },
+  {
+    "PackageVersion": "121.0.6128.2",
+    "PackageIdentifier": "Google.Chrome.Canary",
+    "Tags": [
+      "browser",
+      "canary",
+      "chromium",
+      "cross-platform",
+      "google",
+      "internet-browser",
+      "web-browser"
+    ],
+    "Commands": null,
+    "Publisher": "Google LLC",
+    "ProductCode": null,
+    "PackageFamilyName": null,
+    "PackageName": "Google Chrome Canary",
+    "Moniker": "chrome-canary"
+  },
+  {
+    "PackageVersion": "122.0.6226.2",
+    "PackageIdentifier": "Google.Chrome.Dev",
+    "Tags": [
+      "browser",
+      "chromium",
+      "cross-platform",
+      "dev",
+      "google",
+      "internet-browser",
+      "web-browser"
+    ],
+    "Commands": [
+      "chrome"
+    ],
+    "Publisher": "Google LLC",
+    "ProductCode": [
+      "{13E2DB9F-048A-39D1-BFC9-36C38EA47BDC}",
+      "{CADF440E-69E3-3E50-9D62-7A094AD613EF}"
+    ],
+    "PackageFamilyName": null,
+    "PackageName": "Google Chrome Dev",
+    "Moniker": "chrome-dev"
+  }
+]

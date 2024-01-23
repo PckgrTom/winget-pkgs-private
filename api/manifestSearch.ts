@@ -157,6 +157,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   // execute the query and return the results
   const results = await query.execute();
 
+  if (!results || results.length === 0) {
+    res.status(204).send();
+  }
+
   let data: {}[] = [];
   for (const result of results) {
     data.push({
