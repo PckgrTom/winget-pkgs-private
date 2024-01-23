@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@vercel/node": "^3.0.17",
+    "@vercel/postgres-kysely": "^0.7.1",
+    "kysely": "^0.26.3"
+  },
+  "devDependencies": {
+    "vercel": "^33.2.0"
+  }
+}
