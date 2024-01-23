@@ -50,7 +50,7 @@ func ManifestsGithub(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	
-	WINGET_PKGS_OWNER = "Pckgr" // TODO: ask @PckgrBot for to add his token
+	WINGET_PKGS_OWNER = "PckgrBot" // TODO: ask @PckgrBot for to add his token
 	const WINGET_PKGS_REPO_NAME = "winget-pkgs-private"
 
 	pkg_id := r.URL.Query().Get("package_identifier")
