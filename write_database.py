@@ -11,23 +11,17 @@ if not os.path.exists('data.json'):
     print('data.json does not exist')
     exit()
 
-# Get environment variables
-host = os.getenv('PGHOST')
-user = os.getenv('PGUSER')
-dbname = os.getenv('PGDATABASE')
-password = os.getenv('PGPASSWORD')
-
 # check if environment variables are set
-if not host or not user or not dbname or not password:
-    print('Environment variables not set')
+if not os.getenv('DATABASE_URL'):
+    print('Could not find DATABASE_URL environment variable')
     exit()
 else:
-    print('Environment variables set')
+    print('Found DATABASE_URL environment variable')
     print('Continuing...')
 
 # Connect to your postgres DB
 print('Connecting to database...')
-conn = psycopg2.connect(dbname=dbname, user=user, password=password, host=host)
+conn = psycopg2.connect(os.getenv('DATABASE_URL'))
 
 # Open a cursor to perform database operations
 cur = conn.cursor()
@@ -37,9 +31,10 @@ print('Loading data.json...')
 with open('data.json') as f:
     data = json.load(f)
 
-# If the table does not exist, create it
+# Drop the table if it already exists
 cur.execute("""
-    CREATE TABLE IF NOT EXISTS packages (
+    DROP TABLE IF EXISTS packages;
+    CREATE TABLE packages (
         "PackageIdentifier" TEXT PRIMARY KEY,
         "PackageVersion" TEXT NOT NULL,
         "PackageName" TEXT NOT NULL,
@@ -51,10 +46,6 @@ cur.execute("""
         "PackageFamilyName" TEXT[]
     )
 """)
-
-# Delete all rows from the table
-print('Deleting all rows from table...')
-cur.execute("TRUNCATE TABLE packages")
 
 # Use INSERT INTO to add the new data
 # json_populate_recordset function can help to convert json to record set
