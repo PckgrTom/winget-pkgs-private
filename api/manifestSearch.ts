@@ -168,7 +168,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const results = await query.execute();
 
   if (!results || results.length === 0) {
-    res.status(204).send();
+    return res.status(204).end();
   }
 
   let data: {}[] = [];
