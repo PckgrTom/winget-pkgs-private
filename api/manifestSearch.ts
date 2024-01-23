@@ -51,82 +51,103 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   // apply each inclusion and filter to the query
-  for (const inclusionOrFilter of inclusionsAndFilters) {
-    if (
-      inclusionOrFilter.PackageMatchField ===
-      "NormalizedPackageNameAndPublisher"
-    ) {
-      query = query.where((eb) =>
-        eb.or([
-          eb(
-            "PackageName",
-            "ilike",
-            `%${inclusionOrFilter.RequestMatch.KeyWord}%`
-          ),
-          eb(
-            "Publisher",
-            "ilike",
-            `%${inclusionOrFilter.RequestMatch.KeyWord}%`
-          ),
-        ])
-      );
-    } else if (inclusionOrFilter.PackageMatchField !== "Market") {
-      switch (inclusionOrFilter.PackageMatchField) {
-        case "Command":
-          // note: it is "Commands" not "Command"
-          query = query.where("Commands", "@>", [
-            inclusionOrFilter.RequestMatch.KeyWord,
-          ]);
-          break;
-        case "Tag":
-          // note: it is "Tags" not "Tag"
-          query = query.where("Tags", "@>", [
-            inclusionOrFilter.RequestMatch.KeyWord,
-          ]);
-          break;
-        case "PackageFamilyName":
-          query = query.where("PackageFamilyName", "@>", [
-            inclusionOrFilter.RequestMatch.KeyWord,
-          ]);
-          break;
-        case "ProductCode":
-          query = query.where("ProductCode", "@>", [
-            inclusionOrFilter.RequestMatch.KeyWord,
-          ]);
-          break;
-        default:
-          if (inclusionOrFilter.RequestMatch.MatchType === "Exact") {
-            query = query.where(
-              inclusionOrFilter.PackageMatchField,
-              "=",
-              inclusionOrFilter.RequestMatch.KeyWord
-            );
-          } else if (
-            inclusionOrFilter.RequestMatch.MatchType === "CaseInsensitive"
-          ) {
-            query = query.where(
-              inclusionOrFilter.PackageMatchField,
-              "ilike",
-              inclusionOrFilter.RequestMatch.KeyWord
-            );
-          } else if (
-            inclusionOrFilter.RequestMatch.MatchType === "StartsWith"
-          ) {
-            query = query.where(
-              inclusionOrFilter.PackageMatchField,
-              "ilike",
-              `${inclusionOrFilter.RequestMatch.KeyWord}%`
-            );
-          } else {
-            query = query.where(
-              inclusionOrFilter.PackageMatchField,
+  if (inclusionsAndFilters.length > 0) {
+    //@ts-ignore
+    query = query.where((eb) => {
+      const ors: any = [];
+
+      for (const inclusionOrFilter of inclusionsAndFilters) {
+        if (
+          inclusionOrFilter.PackageMatchField ===
+          "NormalizedPackageNameAndPublisher"
+        ) {
+          ors.push(
+            eb(
+              "PackageName",
               "ilike",
               `%${inclusionOrFilter.RequestMatch.KeyWord}%`
-            );
+            )
+          );
+          ors.push(
+            eb(
+              "Publisher",
+              "ilike",
+              `%${inclusionOrFilter.RequestMatch.KeyWord}%`
+            )
+          );
+        } else if (inclusionOrFilter.PackageMatchField !== "Market") {
+          switch (inclusionOrFilter.PackageMatchField) {
+            case "Command":
+              ors.push(
+                // note: it is "Commands" not "Command"
+                eb("Commands", "@>", [inclusionOrFilter.RequestMatch.KeyWord])
+              );
+              break;
+            case "Tag":
+              ors.push(
+                // note: it is "Tags" not "Tag"
+                eb("Tags", "@>", [inclusionOrFilter.RequestMatch.KeyWord])
+              );
+              break;
+            case "PackageFamilyName":
+              ors.push(
+                eb("PackageFamilyName", "@>", [
+                  inclusionOrFilter.RequestMatch.KeyWord,
+                ])
+              );
+              break;
+            case "ProductCode":
+              ors.push(
+                eb("ProductCode", "@>", [
+                  inclusionOrFilter.RequestMatch.KeyWord,
+                ])
+              );
+              break;
+            default:
+              if (inclusionOrFilter.RequestMatch.MatchType === "Exact") {
+                ors.push(
+                  eb(
+                    inclusionOrFilter.PackageMatchField,
+                    "=",
+                    inclusionOrFilter.RequestMatch.KeyWord
+                  )
+                );
+              } else if (
+                inclusionOrFilter.RequestMatch.MatchType === "CaseInsensitive"
+              ) {
+                ors.push(
+                  eb(
+                    inclusionOrFilter.PackageMatchField,
+                    "ilike",
+                    inclusionOrFilter.RequestMatch.KeyWord
+                  )
+                );
+              } else if (
+                inclusionOrFilter.RequestMatch.MatchType === "StartsWith"
+              ) {
+                ors.push(
+                  eb(
+                    inclusionOrFilter.PackageMatchField,
+                    "ilike",
+                    `${inclusionOrFilter.RequestMatch.KeyWord}%`
+                  )
+                );
+              } else {
+                ors.push(
+                  eb(
+                    inclusionOrFilter.PackageMatchField,
+                    "ilike",
+                    `%${inclusionOrFilter.RequestMatch.KeyWord}%`
+                  )
+                );
+              }
+              break;
           }
-          break;
+        }
+
+        return eb.or(ors);
       }
-    }
+    });
   }
 
   if (req.body.MaxiumumResults) {
