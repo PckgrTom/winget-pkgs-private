@@ -1,0 +1,21 @@
+name: Update database
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - manifests/**
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: .\build_database.ps1
+        shell: pwsh
+
+      - run: python write_database.py
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
