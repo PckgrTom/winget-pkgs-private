@@ -24,6 +24,8 @@ jobs:
       - run: .\build_database.ps1
         shell: pwsh
 
+      - run: pip install -r requirements.txt
+
       - run: python write_database.py
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
