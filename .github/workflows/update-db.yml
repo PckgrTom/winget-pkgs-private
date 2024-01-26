@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - manifests/**
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}
@@ -16,6 +17,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - run: Install-Module -Name powershell-yaml -Force -Repository PSGallery -Scope CurrentUser
+        shell: pwsh
 
       - run: .\build_database.ps1
         shell: pwsh
