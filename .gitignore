@@ -2,3 +2,4 @@ node_modules
 .venv
 .vercel
 .env*.local
+data.json
