@@ -6,20 +6,20 @@ Get-Content -Raw .\Pckgr_PrivateRepoList.csv | ConvertFrom-Csv | Select-Object -
         return
     }
 
-    $path = Join-Path "$PSScriptRoot" "manifests" $appid.ToLower()[0] $appid.Replace('.', '/')
+    $path = Join-Path "$PSScriptRoot" 'manifests' $appid.ToLower()[0] $appid.Replace('.', '/')
     if (Test-Path -Path $path) {
         return
     }
 
     if ($fail -contains "failed to get manifest for $appid") {
-        echo "skipping $appid - failed"
+        Write-Output "skipping $appid - failed"
         return
     }
     
     $URL = "https://vedantmgoyal.vercel.app/api/winget-pkgs/manifests/$appid"
-    echo $URL
+    Write-Output $URL
 
-    $req = Invoke-RestMethod -Uri $URL -Method Get -ContentType "application/json" -StatusCodeVariable status
+    $req = Invoke-RestMethod -Uri $URL -Method Get -ContentType 'application/json' -StatusCodeVariable status
 
     if ($status -ne 200) {
         Write-Output "failed to get manifest for $appid"
