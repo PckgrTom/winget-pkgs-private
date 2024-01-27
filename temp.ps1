@@ -1,12 +1,18 @@
-$suc = Get-Content -Path .\success.txt
+$fail = Get-Content -Path .\failed.txt
 Get-Content -Raw .\Pckgr_PrivateRepoList.csv | ConvertFrom-Csv | Select-Object -Property AppID -Unique | ForEach-Object { 
     $appid = $_.AppID
 
     if ($appid -eq 'AppID') {
         return
     }
-    if ($suc -contains "'$appid'") {
-        echo "skipping $appid"
+
+    $path = Join-Path "$PSScriptRoot" "manifests" $appid.ToLower()[0] $appid.Replace('.', '/')
+    if (Test-Path -Path $path) {
+        return
+    }
+
+    if ($fail -contains "failed to get manifest for $appid") {
+        echo "skipping $appid - failed"
         return
     }
     
@@ -32,6 +38,5 @@ Get-Content -Raw .\Pckgr_PrivateRepoList.csv | ConvertFrom-Csv | Select-Object -
         } 
     }
 
-    "'$appid'" >> .\success.txt
     Remove-Variable -Name status
 }
