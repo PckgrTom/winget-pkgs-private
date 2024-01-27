@@ -1,31 +1,24 @@
 name: Update database
-
 on:
   push:
     branches:
-      - main
+      - master
     paths:
-      - manifests/**/*
+      - manifests/**
   workflow_dispatch:
-
 concurrency:
   group: ${{ github.workflow }}
   cancel-in-progress: false  
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
       - run: Install-Module -Name powershell-yaml -Force -Repository PSGallery -Scope CurrentUser
-        shell: pwsh
-
+        shell: push
       - run: .\build_database.ps1
         shell: pwsh
-
       - run: pip install -r requirements.txt
-
       - run: python write_database.py
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
