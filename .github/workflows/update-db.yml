@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: Install-Module -Name powershell-yaml -Force -Repository PSGallery -Scope CurrentUser
-        shell: push
+        shell: pwsh
       - run: .\build_database.ps1
         shell: pwsh
       - run: pip install -r requirements.txt
