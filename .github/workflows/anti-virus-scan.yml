@@ -23,7 +23,7 @@ jobs:
           json: "true"
       - name: List all changed files
         run: |
-          ALL_CHANGED_FILES=$(echo "${{ steps.changed-files.outputs.all_changed_files }}" | jq -r '.[]')
+          ALL_CHANGED_FILES=$(echo "$ALL_CHANGED_FILES_JSON" | jq -r '.[]')
           for file in "$ALL_CHANGED_FILES"; do
             echo "$file was changed"
           done
