@@ -1,5 +1,5 @@
-$fail = Get-Content -Path .\failed.txt
-Get-Content -Raw .\Pckgr_PrivateRepoList.csv | ConvertFrom-Csv | Select-Object -Property AppID -Unique | ForEach-Object { 
+$fail = Get-Content -Path $PSScriptRoot\failed.txt
+Get-Content -Raw $PSScriptRoot\Pckgr_PrivateRepoList.csv | ConvertFrom-Csv | Select-Object -Property AppID -Unique | ForEach-Object { 
     $appid = $_.AppID
 
     if ($appid -eq 'AppID') {
@@ -23,7 +23,7 @@ Get-Content -Raw .\Pckgr_PrivateRepoList.csv | ConvertFrom-Csv | Select-Object -
 
     if ($status -ne 200) {
         Write-Output "failed to get manifest for $appid"
-        Write-Output "failed to get manifest for $appid" >> .\failed.txt
+        Write-Output "failed to get manifest for $appid" >> $PSScriptRoot\failed.txt
         return
     }
 
