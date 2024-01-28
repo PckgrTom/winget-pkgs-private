@@ -76,6 +76,9 @@ jobs:
               Write-Error " - Threat detected in $fileName"
               exit 1
             }
+            else{
+              Write-Output "Installer has passed Defender Scan"
+            }
           }
       - name: Run winget install
         run: |
