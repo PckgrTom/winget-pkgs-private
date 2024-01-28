@@ -21,14 +21,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   console.log(`Filters: ${JSON.stringify(Filters, null, 0)}`);
   console.log(`MaxiumumResults: ${MaxiumumResults}`);
 
+  let [hostHead] = process.env.PGHOST!.split(".");
   const db = new Kysely<Database>({
     dialect: new PostgresDialect({
       pool: new Pool({
-        database: process.env.PGDATABASE,
-        host: process.env.PGHOST,
-        user: process.env.PGUSER,
-        password: process.env.PGPASSWORD,
-        port: 5432,
+        connectionString: process.env.DATABASE_URL!.replace(
+          hostHead,
+          `${hostHead}-pooler`
+        ),
       }),
     }),
   });
