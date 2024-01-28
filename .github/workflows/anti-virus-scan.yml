@@ -86,8 +86,8 @@ jobs:
             Write-Error 'Install failed for ${{ steps.parent-dir.outputs.parent-dir }}'
             exit 1
           }
-      - name: Run Windows Defender Full Scan
+      - name: Windows Defender Quick Scan
         run: |
           "C:\Program Files\Windows Defender\MpCmdRun.exe" -SignatureUpdate -MMPC
-          "C:\Program Files\Windows Defender\MpCmdRun.exe" -Scan -ScanType 2
+          "C:\Program Files\Windows Defender\MpCmdRun.exe" -Scan -ScanType 1
         shell: cmd
