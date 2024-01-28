@@ -1,6 +1,6 @@
 import { VercelRequest, VercelResponse } from "@vercel/node";
 import { Kysely, PostgresDialect } from "kysely";
-import { Pool } from "pg";
+import { Pool } from "@neondatabase/serverless";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // only allow POST requests
@@ -21,14 +21,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   console.log(`Filters: ${JSON.stringify(Filters, null, 0)}`);
   console.log(`MaxiumumResults: ${MaxiumumResults}`);
 
-  let [hostHead] = process.env.PGHOST!.split(".");
   const db = new Kysely<Database>({
     dialect: new PostgresDialect({
       pool: new Pool({
-        connectionString: `${process.env.DATABASE_URL!.replace(
-          hostHead,
-          `${hostHead}-pooler`
-        )}?sslmode=require`,
+        connectionString: process.env.DATABASE_URL,
       }),
     }),
   });
