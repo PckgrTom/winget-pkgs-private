@@ -25,10 +25,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const db = new Kysely<Database>({
     dialect: new PostgresDialect({
       pool: new Pool({
-        connectionString: process.env.DATABASE_URL!.replace(
+        connectionString: `${process.env.DATABASE_URL!.replace(
           hostHead,
           `${hostHead}-pooler`
-        ),
+        )}?sslmode=require`,
       }),
     }),
   });
