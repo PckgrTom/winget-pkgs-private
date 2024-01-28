@@ -9,15 +9,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   // Parse the request body as JSON
-  const { Query, Inclusions, Filters } = req.body as {
+  const { Query, Inclusions, Filters, MaxiumumResults } = req.body as {
     Query: SearchRequestMatch;
     Inclusions: SearchRequestInclusionAndFilterSchema;
     Filters: SearchRequestInclusionAndFilterSchema;
+    MaxiumumResults: number;
   };
-  console.log(JSON.stringify(req.body, null, 0));
   console.log(`Query: ${JSON.stringify(Query, null, 0)}`);
   console.log(`Inclusions: ${JSON.stringify(Inclusions, null, 0)}`);
   console.log(`Filters: ${JSON.stringify(Filters, null, 0)}`);
+  console.log(`MaxiumumResults: ${MaxiumumResults}`);
 
   let [hostHead] = process.env.PGHOST!.split(".");
 
@@ -57,85 +58,68 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const ors: any = [];
 
       for (const inclusionOrFilter of inclusionsAndFilters) {
-        if (
-          inclusionOrFilter.PackageMatchField ===
-          "NormalizedPackageNameAndPublisher"
-        ) {
-          ors.push(
-            eb(
-              "PackageName",
-              "ilike",
-              `%${inclusionOrFilter.RequestMatch.KeyWord}%`
-            )
-          );
-          ors.push(
-            eb(
-              "Publisher",
-              "ilike",
-              `%${inclusionOrFilter.RequestMatch.KeyWord}%`
-            )
-          );
-        } else if (inclusionOrFilter.PackageMatchField !== "Market") {
-          switch (inclusionOrFilter.PackageMatchField) {
-            case "Command":
-              ors.push(
-                eb(
-                  eb.val(inclusionOrFilter.RequestMatch.KeyWord),
-                  "ilike",
-                  eb.fn.any("Commands") // note: it is "Commands" not "Command"
-                )
-              );
-              break;
-            case "Tag":
-              ors.push(
-                eb(
-                  eb.val(inclusionOrFilter.RequestMatch.KeyWord),
-                  "ilike",
-                  eb.fn.any("Tags") // note: it is "Tags" not "Tag"
-                )
-              );
-              break;
-            case "PackageFamilyName":
-              ors.push(
-                eb(
-                  eb.val(inclusionOrFilter.RequestMatch.KeyWord),
-                  "ilike",
-                  eb.fn.any("PackageFamilyName")
-                )
-              );
-              break;
-            case "ProductCode":
-              ors.push(
-                eb(
-                  eb.val(inclusionOrFilter.RequestMatch.KeyWord),
-                  "ilike",
-                  eb.fn.any("ProductCode")
-                )
-              );
-              break;
-            default:
-              ors.push(
-                eb(
-                  inclusionOrFilter.PackageMatchField,
-                  `${
-                    inclusionOrFilter.RequestMatch.MatchType === "Exact"
-                      ? "="
-                      : "ilike"
-                  }`,
-                  `${
-                    ["Exact", "CaseInsensitive"].includes(
-                      inclusionOrFilter.RequestMatch.MatchType
-                    )
-                      ? inclusionOrFilter.RequestMatch.KeyWord
-                      : inclusionOrFilter.RequestMatch.MatchType ===
-                        "StartsWith"
-                      ? `${inclusionOrFilter.RequestMatch.KeyWord}%`
-                      : `%${inclusionOrFilter.RequestMatch.KeyWord}%`
-                  }`
-                )
-              );
-              break;
-          }
+        switch (inclusionOrFilter.PackageMatchField) {
+          case "NormalizedPackageNameAndPublisher":
+            ors.push(
+              eb(
+                "PackageName",
+                "ilike",
+                `%${inclusionOrFilter.RequestMatch.KeyWord}%`
+              )
+            );
+            ors.push(
+              eb(
+                "Publisher",
+                "ilike",
+                `%${inclusionOrFilter.RequestMatch.KeyWord}%`
+              )
+            );
+            break;
+          case "Command":
+          case "Tag":
+            ors.push(
+              eb(
+                eb.val(inclusionOrFilter.RequestMatch.KeyWord),
+                "ilike",
+                // Table names are "Commands"/"Tags", not "Command"/"Tag"
+                eb.fn.any(`${inclusionOrFilter.PackageMatchField}s`)
+              )
+            );
+            break;
+          case "PackageFamilyName":
+          case "ProductCode":
+            ors.push(
+              eb(
+                eb.val(inclusionOrFilter.RequestMatch.KeyWord),
+                "ilike",
+                eb.fn.any(inclusionOrFilter.PackageMatchField)
+              )
+            );
+            break;
+          case "Market":
+            // we do not support filtering by market
+            break;
+          default:
+            ors.push(
+              eb(
+                inclusionOrFilter.PackageMatchField,
+                `${
+                  inclusionOrFilter.RequestMatch.MatchType === "Exact"
+                    ? "="
+                    : "ilike"
+                }`,
+                `${
+                  ["Exact", "CaseInsensitive"].includes(
+                    inclusionOrFilter.RequestMatch.MatchType
+                  )
+                    ? inclusionOrFilter.RequestMatch.KeyWord
+                    : inclusionOrFilter.RequestMatch.MatchType === "StartsWith"
+                    ? `${inclusionOrFilter.RequestMatch.KeyWord}%`
+                    : `%${inclusionOrFilter.RequestMatch.KeyWord}%`
+                }`
+              )
+            );
+            break;
         }
 
         return eb.or(ors);
@@ -143,11 +127,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
   }
 
-  if (req.body.MaxiumumResults) {
-    query = query.limit(req.body.MaxiumumResults);
+  if (MaxiumumResults) {
+    query = query.limit(MaxiumumResults);
   }
 
   // execute the query and return the results
+  console.log(`SQL: ${query.compile()}`);
   const results = await query.execute();
 
   if (!results || results.length === 0) {
