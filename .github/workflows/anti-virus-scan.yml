@@ -55,9 +55,9 @@ jobs:
         run: |
           Write-OutPut 'Scanning ${{ matrix.file }}'
           Remove-MpPreference -ExclusionPath (Get-MpPreference).ExclusionPath
-          Write-Output '- Getting installer urls...'
+          Write-Output 'Getting installer urls...'
           $installerUrls = Get-Content '${{ matrix.file }}' | ConvertFrom-Yaml | Select-Object -ExpandProperty Installers | Select-Object -ExpandProperty InstallerUrl -Unique
-          Write-Output " - Found $($installerUrls.Count) installer urls"
+          Write-Output " Found $($installerUrls.Count) installer urls"
           $installerUrls | ForEach-Object {
             Write-Output " - Scanning $_"
             $tempFile = New-TemporaryFile
@@ -73,10 +73,9 @@ jobs:
             }
             $threatDetection = Get-MpThreatDetection
             if ($threatDetection) {
-              Write-Error " - Threat detected in $fileName"
+              Write-Error "Threat detected in $fileName"
               exit 1
-            }
-            else {
+            } else {
               Write-Output " - Installer has passed Defender Scan"
             }
           }
@@ -87,3 +86,8 @@ jobs:
             Write-Error 'Install failed for ${{ steps.parent-dir.outputs.parent-dir }}'
             exit 1
           }
+      - name: Run Windows Defender Full Scan
+        run: |
+          "C:\Program Files\Windows Defender\MpCmdRun.exe" -SignatureUpdate -MMPC
+          "C:\Program Files\Windows Defender\MpCmdRun.exe" -Scan -ScanType 2
+        shell: cmd
