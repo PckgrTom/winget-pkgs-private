@@ -1,5 +1,6 @@
 import { VercelRequest, VercelResponse } from "@vercel/node";
 import { createKysely } from "@vercel/postgres-kysely";
+import { sql } from "kysely";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // only allow POST requests
@@ -108,15 +109,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                     ? "="
                     : "ilike"
                 }`,
-                `${
-                  ["Exact", "CaseInsensitive"].includes(
-                    inclusionOrFilter.RequestMatch.MatchType
-                  )
-                    ? inclusionOrFilter.RequestMatch.KeyWord
-                    : inclusionOrFilter.RequestMatch.MatchType === "StartsWith"
-                    ? `${inclusionOrFilter.RequestMatch.KeyWord}%`
-                    : `%${inclusionOrFilter.RequestMatch.KeyWord}%`
-                }`
+                sql.lit(
+                  `${
+                    ["Exact", "CaseInsensitive"].includes(
+                      inclusionOrFilter.RequestMatch.MatchType
+                    )
+                      ? inclusionOrFilter.RequestMatch.KeyWord
+                      : inclusionOrFilter.RequestMatch.MatchType ===
+                        "StartsWith"
+                      ? `${inclusionOrFilter.RequestMatch.KeyWord}%`
+                      : `%${inclusionOrFilter.RequestMatch.KeyWord}%`
+                  }`
+                )
               )
             );
             break;
@@ -132,7 +136,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   // execute the query and return the results
-  console.log(`SQL: ${JSON.stringify(query.compile(), null, 0)}`);
+  console.log(`SQL: ${query.compile().sql}`);
+  console.log(`Params: ${JSON.stringify(query.compile().parameters, null, 0)}`);
   const results = await query.execute();
 
   if (!results || results.length === 0) {
