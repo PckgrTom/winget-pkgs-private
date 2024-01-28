@@ -18,7 +18,7 @@ jobs:
         shell: pwsh
       - run: .\Tools\build_database.ps1
         shell: pwsh
-      - run: pip install -r requirements.txt
+      - run: pip install -r Tools/requirements.txt
       - run: python Tools/write_database.py
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
