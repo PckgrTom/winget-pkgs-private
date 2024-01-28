@@ -71,7 +71,7 @@ jobs:
               Write-Output ' - Waiting for scan to complete...'
               Start-Sleep -Seconds 5
             }
-            $threatDetection = Get-MpThreatDetection | Where-Object {$_.Resources -contains $fileName}
+            $threatDetection = Get-MpThreatDetection
             if ($threatDetection) {
               Write-Error " - Threat detected in $fileName"
               exit 1
