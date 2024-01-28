@@ -132,7 +132,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   // execute the query and return the results
-  console.log(`SQL: ${query.compile()}`);
+  console.log(`SQL: ${JSON.stringify(query.compile(), null, 0)}`);
   const results = await query.execute();
 
   if (!results || results.length === 0) {
