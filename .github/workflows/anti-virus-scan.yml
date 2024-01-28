@@ -56,7 +56,7 @@ jobs:
         run: |
           Write-OutPut 'Scanning ${{ matrix.file }}'
           Write-Output '- Getting installer urls...'
-          $installerUrls = Get-Content '${{ matrix.file }}' | ConvertFrom-Yaml | Select-Object -ExpandProperty Installer | Select-Object -ExpandProperty InstallerUrl
+          $installerUrls = Get-Content '${{ matrix.file }}' | ConvertFrom-Yaml | Select-Object -ExpandProperty Installers | Select-Object -ExpandProperty InstallerUrl
           Write-Output " - Found $($installerUrls.Count) installer urls"
           $installerUrls | ForEach-Object {
             Write-Output " - Scanning $_"
