@@ -1,7 +1,7 @@
 #Requires -Version 7.2.2
 #Requires -Modules powershell-yaml
 
-$ManifestsDir = Join-Path -Path $PSScriptRoot -ChildPath 'manifests'
+$ManifestsDir = Join-Path -Path $PSScriptRoot '..' 'manifests'
 
 #region Functions
 function Get-VersionLevelDirs {

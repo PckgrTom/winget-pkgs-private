@@ -7,7 +7,8 @@ import os
 load_dotenv('.env.local')
 
 # Check if data.json exists, relative to path of this python file
-if not os.path.exists('data.json'):
+data_json_path = os.path.join(os.path.dirname(__file__), 'data.json')
+if not os.path.exists(data_json_path):
     print('data.json does not exist')
     exit()
 
@@ -28,7 +29,7 @@ cur = conn.cursor()
 
 # Open the JSON file
 print('Loading data.json...')
-with open('data.json') as f:
+with open(data_json_path) as f:
     data = json.load(f)
 
 # Drop the table if it already exists

@@ -6,7 +6,7 @@ Get-Content -Raw .\Pckgr_PrivateRepoList.csv | ConvertFrom-Csv | Select-Object -
         return
     }
 
-    $path = Join-Path "$PSScriptRoot" 'manifests' $appid.ToLower()[0] $appid.Replace('.', '/')
+    $path = Join-Path "$PSScriptRoot" '..' 'manifests' $appid.ToLower()[0] $appid.Replace('.', '/')
     if (Test-Path -Path $path) {
         return
     }
@@ -31,7 +31,7 @@ Get-Content -Raw .\Pckgr_PrivateRepoList.csv | ConvertFrom-Csv | Select-Object -
         $i = $_.count - 1 ; 
         $j = $_; 
         0..$i | ForEach-Object { 
-            $pathofm = Join-Path $PSScriptRoot -ChildPath $j[$_].FileName;
+            $pathofm = Join-Path $PSScriptRoot '..' $j[$_].FileName;
 
             New-Item -Path $pathofm -ItemType File -Force; 
             $j[$_].Content | Out-File -FilePath $pathofm -Force; 
