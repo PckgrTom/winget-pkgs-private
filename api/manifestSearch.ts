@@ -81,7 +81,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               ors.push(
                 eb(
                   eb.val(inclusionOrFilter.RequestMatch.KeyWord),
-                  "=",
+                  "ilike",
                   eb.fn.any("Commands") // note: it is "Commands" not "Command"
                 )
               );
@@ -90,7 +90,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               ors.push(
                 eb(
                   eb.val(inclusionOrFilter.RequestMatch.KeyWord),
-                  "=",
+                  "ilike",
                   eb.fn.any("Tags") // note: it is "Tags" not "Tag"
                 )
               );
@@ -99,7 +99,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               ors.push(
                 eb(
                   eb.val(inclusionOrFilter.RequestMatch.KeyWord),
-                  "=",
+                  "ilike",
                   eb.fn.any("PackageFamilyName")
                 )
               );
@@ -108,49 +108,32 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
               ors.push(
                 eb(
                   eb.val(inclusionOrFilter.RequestMatch.KeyWord),
-                  "=",
+                  "ilike",
                   eb.fn.any("ProductCode")
                 )
               );
               break;
             default:
-              if (inclusionOrFilter.RequestMatch.MatchType === "Exact") {
-                ors.push(
-                  eb(
-                    inclusionOrFilter.PackageMatchField,
-                    "=",
-                    inclusionOrFilter.RequestMatch.KeyWord
-                  )
-                );
-              } else if (
-                inclusionOrFilter.RequestMatch.MatchType === "CaseInsensitive"
-              ) {
-                ors.push(
-                  eb(
-                    inclusionOrFilter.PackageMatchField,
-                    "ilike",
-                    inclusionOrFilter.RequestMatch.KeyWord
-                  )
-                );
-              } else if (
-                inclusionOrFilter.RequestMatch.MatchType === "StartsWith"
-              ) {
-                ors.push(
-                  eb(
-                    inclusionOrFilter.PackageMatchField,
-                    "ilike",
-                    `${inclusionOrFilter.RequestMatch.KeyWord}%`
-                  )
-                );
-              } else {
-                ors.push(
-                  eb(
-                    inclusionOrFilter.PackageMatchField,
-                    "ilike",
-                    `%${inclusionOrFilter.RequestMatch.KeyWord}%`
-                  )
-                );
-              }
+              ors.push(
+                eb(
+                  inclusionOrFilter.PackageMatchField,
+                  `${
+                    inclusionOrFilter.RequestMatch.MatchType === "Exact"
+                      ? "="
+                      : "ilike"
+                  }`,
+                  `${
+                    ["Exact", "CaseInsensitive"].includes(
+                      inclusionOrFilter.RequestMatch.MatchType
+                    )
+                      ? inclusionOrFilter.RequestMatch.KeyWord
+                      : inclusionOrFilter.RequestMatch.MatchType ===
+                        "StartsWith"
+                      ? `${inclusionOrFilter.RequestMatch.KeyWord}%`
+                      : `%${inclusionOrFilter.RequestMatch.KeyWord}%`
+                  }`
+                )
+              );
               break;
           }
         }
