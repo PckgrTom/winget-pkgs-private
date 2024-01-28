@@ -1,26 +1,28 @@
-import { VercelRequest, VercelResponse } from "@vercel/node";
 import { Kysely, PostgresDialect } from "kysely";
 import { Pool } from "@neondatabase/serverless";
 
 export const config = {
-  runtime: 'edge',
-  regions: ['iad1'],
+  runtime: "edge",
+  regions: ["iad1"],
 };
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async (req: Request) => {
   // only allow POST requests
   if (req.method !== "POST") {
-    res.status(405).send("Method Not Allowed");
-    return;
+    return new Response(null, {
+      status: 405,
+      statusText: "Method Not Allowed",
+    });
   }
 
   // Parse the request body as JSON
-  const { Query, Inclusions, Filters, MaxiumumResults } = req.body as {
-    Query: SearchRequestMatch;
-    Inclusions: SearchRequestInclusionAndFilterSchema;
-    Filters: SearchRequestInclusionAndFilterSchema;
-    MaxiumumResults: number;
-  };
+  const { Query, Inclusions, Filters, MaxiumumResults } =
+    (await req.json()) as {
+      Query: SearchRequestMatch;
+      Inclusions: SearchRequestInclusionAndFilterSchema;
+      Filters: SearchRequestInclusionAndFilterSchema;
+      MaxiumumResults: number;
+    };
   console.log(`Query: ${JSON.stringify(Query, null, 0)}`);
   console.log(`Inclusions: ${JSON.stringify(Inclusions, null, 0)}`);
   console.log(`Filters: ${JSON.stringify(Filters, null, 0)}`);
@@ -142,7 +144,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const results = await query.execute();
 
   if (!results || results.length === 0) {
-    return res.status(204).end();
+    return new Response(null, {
+      status: 204,
+      statusText: "No Content",
+    });
   }
 
   let data: {}[] = [];
@@ -163,11 +168,19 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
   }
 
-  res.status(200).json({
-    Data: data,
-    UnsupportedPackageMatchFields: ["Market"],
-  });
-}
+  return new Response(
+    JSON.stringify({
+      Data: data,
+      UnsupportedPackageMatchFields: ["Market"],
+    }),
+    {
+      status: 200,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+};
 
 interface Database {
   packages: PackagesTable;
