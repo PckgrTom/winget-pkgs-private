@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.5.0.schema.json
 
 PackageIdentifier: Google.Chrome
-PackageVersion: 120.0.6099.268
+PackageVersion: 120.0.6099.2681
 InstallerLocale: en-US
 InstallerType: msi
 UpgradeBehavior: install
@@ -26,7 +26,7 @@ AppsAndFeaturesEntries:
 Installers:
 - Architecture: x86
   Scope: user
-  InstallerUrl: https://dl.google.com/dl/chrome/install/googlechromestandaloneenterprise.msi1
+  InstallerUrl: https://dl.google.com/dl/chrome/install/googlechromestandaloneenterprise.msi
   InstallerSha256: FCBA68333D90452E20A1AA193A35FDDA666E0B32D2FAF91B35350DA2761A4911
   ProductCode: '{60ED5DE3-670F-3F4A-9103-55CA54EA4726}'
 - Architecture: x86
