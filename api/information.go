@@ -16,7 +16,7 @@ func Information(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]map[string]interface{}{
 		"Data": {
-			"SourceIdentifier":        "winget-pkgs-private",
+			"SourceIdentifier":        "winget-pkgs-pckgr",
 			"ServerSupportedVersions": []string{"1.6.0"},
 			"UnsupportedPackageMatchFields": []string{
 				"Market",
