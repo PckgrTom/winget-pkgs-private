@@ -31,7 +31,7 @@ func ManifestsGithub(w http.ResponseWriter, r *http.Request) {
 	var github_client *github.Client
 	var WINGET_PKGS_OWNER string
 
-	if val, ok := os.LookupEnv("GITHUB_PAT"); !ok || len(val) != 40 {
+	if val, ok := os.LookupEnv("GITHUB_PAT"); !ok {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("GITHUB_PAT environment variable is not set."))
 		return
