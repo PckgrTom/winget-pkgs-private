@@ -20,14 +20,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   console.log(`Filters: ${JSON.stringify(Filters, null, 0)}`);
   console.log(`MaxiumumResults: ${MaxiumumResults}`);
 
-  // let [hostHead] = process.env.PGHOST!.split(".");
-  // const db = createKysely<Database>({
-  //   connectionString: process.env.DATABASE_URL!.replace(
-  //     hostHead,
-  //     `${hostHead}-pooler`
-  //   ),
-  // });
-  const db = createKysely<Database>();
+  let [hostHead] = process.env.PGHOST!.split(".");
+  const db = createKysely<Database>({
+    connectionString: process.env.DATABASE_URL!.replace(
+      hostHead,
+      `${hostHead}-pooler`
+    ),
+  });
+  // const db = createKysely<Database>();
   let query = db.selectFrom("packages").selectAll();
 
   if (Query) {
