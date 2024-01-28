@@ -29,7 +29,7 @@ cur = conn.cursor()
 
 # Open the JSON file
 print('Loading data.json...')
-with open(data_json_path) as f:
+with open(data_json_path, encoding='utf8') as f:
     data = json.load(f)
 
 # Drop the table if it already exists
