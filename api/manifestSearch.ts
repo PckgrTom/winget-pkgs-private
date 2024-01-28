@@ -2,6 +2,11 @@ import { VercelRequest, VercelResponse } from "@vercel/node";
 import { Kysely, PostgresDialect } from "kysely";
 import { Pool } from "@neondatabase/serverless";
 
+export const config = {
+  runtime: 'edge',
+  regions: ['iad1'],
+};
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // only allow POST requests
   if (req.method !== "POST") {
