@@ -1,6 +1,5 @@
 import { VercelRequest, VercelResponse } from "@vercel/node";
 import { createKysely } from "@vercel/postgres-kysely";
-import { sql } from "kysely";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // only allow POST requests
@@ -21,14 +20,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   console.log(`Filters: ${JSON.stringify(Filters, null, 0)}`);
   console.log(`MaxiumumResults: ${MaxiumumResults}`);
 
-  let [hostHead] = process.env.PGHOST!.split(".");
-
-  const db = createKysely<Database>({
-    connectionString: process.env.DATABASE_URL!.replace(
-      hostHead,
-      `${hostHead}-pooler`
-    ),
-  });
+  // let [hostHead] = process.env.PGHOST!.split(".");
+  // const db = createKysely<Database>({
+  //   connectionString: process.env.DATABASE_URL!.replace(
+  //     hostHead,
+  //     `${hostHead}-pooler`
+  //   ),
+  // });
+  const db = createKysely<Database>();
   let query = db.selectFrom("packages").selectAll();
 
   if (Query) {
@@ -109,18 +108,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
                     ? "="
                     : "ilike"
                 }`,
-                sql.lit(
-                  `${
-                    ["Exact", "CaseInsensitive"].includes(
-                      inclusionOrFilter.RequestMatch.MatchType
-                    )
-                      ? inclusionOrFilter.RequestMatch.KeyWord
-                      : inclusionOrFilter.RequestMatch.MatchType ===
-                        "StartsWith"
-                      ? `${inclusionOrFilter.RequestMatch.KeyWord}%`
-                      : `%${inclusionOrFilter.RequestMatch.KeyWord}%`
-                  }`
-                )
+                `${
+                  ["Exact", "CaseInsensitive"].includes(
+                    inclusionOrFilter.RequestMatch.MatchType
+                  )
+                    ? inclusionOrFilter.RequestMatch.KeyWord
+                    : inclusionOrFilter.RequestMatch.MatchType === "StartsWith"
+                    ? `${inclusionOrFilter.RequestMatch.KeyWord}%`
+                    : `%${inclusionOrFilter.RequestMatch.KeyWord}%`
+                }`
               )
             );
             break;
