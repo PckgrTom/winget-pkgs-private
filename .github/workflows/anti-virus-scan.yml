@@ -97,13 +97,13 @@ jobs:
           "C:\Program Files\Windows Defender\MpCmdRun.exe" -Scan -ScanType 1
         shell: cmd
       - if: ${{ success() }}
-        run: gh pr edit $PR_NUMBER --add-label scan/passed
+        run: gh pr edit $PR --add-label scan/passed
         env:
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR: ${{ github.event.pull_request.html_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - if: ${{ failure() }}
-        run: gh pr edit $PR_NUMBER --add-label scan/failed
+        run: gh pr edit $PR --add-label scan/failed
         env:
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR: ${{ github.event.pull_request.html_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
