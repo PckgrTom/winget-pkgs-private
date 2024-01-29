@@ -29,7 +29,7 @@ func PackageManifests(w http.ResponseWriter, r *http.Request) {
 	// error will only be of type *url.Error, so added check for status code as well
 	if err != nil || res.StatusCode != http.StatusOK {
 		// we assume that the error is because the package was not found because
-		// the API seems to be stable 🙂 and the only error that can occur is when the package is not found 
+		// the API seems to be stable 🙂 and the only error that can occur is when the package is not found
 		w.WriteHeader(http.StatusNoContent)
 		w.Write([]byte(fmt.Sprintf("package %s not found in repo", pkg_id)))
 		return

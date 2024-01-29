@@ -1,4 +1,4 @@
-name: Scan manifests 
+name: Scan manifests
 on:
   pull_request:
     branches:
@@ -31,7 +31,7 @@ jobs:
           if [ $(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq '. | length') -gt 1 ]; then
             echo "More than 1 installer manifest changed, exiting"
             exit 1
-          fi          
+          fi
   scan:
     name: Scan
     runs-on: windows-latest

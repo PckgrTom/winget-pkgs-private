@@ -49,7 +49,7 @@ func ManifestsGithub(w http.ResponseWriter, r *http.Request) {
 			WINGET_PKGS_OWNER = user.GetLogin() // get winget-pkgs owner from token
 		}
 	}
-	
+
 	const WINGET_PKGS_REPO_NAME = "winget-pkgs-private"
 
 	pkg_id := r.URL.Query().Get("package_identifier")

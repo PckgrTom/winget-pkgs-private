@@ -65,7 +65,7 @@ foreach ($package in $PackagesAndVersions.Keys) {
     foreach ($manifestfile in $manifestfiles) {
         $manifest = Get-Content -Path $manifestfile.FullName -Raw | ConvertFrom-Yaml
         switch ($manifest.ManifestType) {
-            'installer' { 
+            'installer' {
                 $data['Commands'] = $manifest.Commands | Select-Object -Unique
                 $data['PackageFamilyName'] = ($manifest.Installers.PackageFamilyName ?? $manifest.PackageFamilyName) | Select-Object -Unique
                 $data['ProductCode'] = ($manifest.Installers.ProductCode ?? $manifest.ProductCode) | Select-Object -Unique
@@ -81,7 +81,7 @@ foreach ($package in $PackagesAndVersions.Keys) {
                     $data['ProductCode'] = @($data['ProductCode'])
                 }
             }
-            'defaultLocale' { 
+            'defaultLocale' {
                 $data['PackageIdentifier'] = $manifest.PackageIdentifier
                 $data['PackageName'] = $manifest.PackageName
                 $data['PackageVersion'] = $manifest.PackageVersion

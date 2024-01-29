@@ -1,5 +1,5 @@
 $fail = Get-Content -Path $PSScriptRoot\failed.txt
-Get-Content -Raw $PSScriptRoot\Pckgr_PrivateRepoList.csv | ConvertFrom-Csv | Select-Object -Property AppID -Unique | ForEach-Object { 
+Get-Content -Raw $PSScriptRoot\Pckgr_PrivateRepoList.csv | ConvertFrom-Csv | Select-Object -Property AppID -Unique | ForEach-Object {
     $appid = $_.AppID
 
     if ($appid -eq 'AppID') {
@@ -15,7 +15,7 @@ Get-Content -Raw $PSScriptRoot\Pckgr_PrivateRepoList.csv | ConvertFrom-Csv | Sel
         Write-Output "skipping $appid - failed"
         return
     }
-    
+
     $URL = "https://vedantmgoyal.vercel.app/api/winget-pkgs/manifests/$appid"
     Write-Output $URL
 
@@ -27,15 +27,15 @@ Get-Content -Raw $PSScriptRoot\Pckgr_PrivateRepoList.csv | ConvertFrom-Csv | Sel
         return
     }
 
-    $req | ForEach-Object { 
-        $i = $_.count - 1 ; 
-        $j = $_; 
-        0..$i | ForEach-Object { 
+    $req | ForEach-Object {
+        $i = $_.count - 1 ;
+        $j = $_;
+        0..$i | ForEach-Object {
             $pathofm = Join-Path $PSScriptRoot '..' $j[$_].FileName;
 
-            New-Item -Path $pathofm -ItemType File -Force; 
-            $j[$_].Content | Out-File -FilePath $pathofm -Force; 
-        } 
+            New-Item -Path $pathofm -ItemType File -Force;
+            $j[$_].Content | Out-File -FilePath $pathofm -Force;
+        }
     }
 
     Remove-Variable -Name status
