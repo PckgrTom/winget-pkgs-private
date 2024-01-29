@@ -57,67 +57,68 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       const ors: any = [];
 
       for (const inclusionOrFilter of inclusionsAndFilters) {
-        if (
-          inclusionOrFilter.PackageMatchField ===
-          "NormalizedPackageNameAndPublisher"
-        ) {
-          ors.push(
-            eb(
-              "PackageName",
-              "ilike",
-              `%${inclusionOrFilter.RequestMatch.KeyWord}%`
-            )
-          );
-          ors.push(
-            eb(
-              "Publisher",
-              "ilike",
-              `%${inclusionOrFilter.RequestMatch.KeyWord}%`
-            )
-          );
-        } else if (
-          inclusionOrFilter.PackageMatchField === "Command" ||
-          inclusionOrFilter.PackageMatchField === "Tag"
-        ) {
-          ors.push(
-            eb(
-              eb.val(inclusionOrFilter.RequestMatch.KeyWord),
-              "ilike",
-              // Table names are "Commands"/"Tags", not "Command"/"Tag"
-              eb.fn.any(`${inclusionOrFilter.PackageMatchField}s`)
-            )
-          );
-        } else if (
-          inclusionOrFilter.PackageMatchField === "PackageFamilyName" ||
-          inclusionOrFilter.PackageMatchField === "ProductCode"
-        ) {
-          ors.push(
-            eb(
-              eb.val(inclusionOrFilter.RequestMatch.KeyWord),
-              "ilike",
-              eb.fn.any(inclusionOrFilter.PackageMatchField)
-            )
-          );
-        } else if (inclusionOrFilter.PackageMatchField !== "Market") {
-          ors.push(
-            eb(
-              inclusionOrFilter.PackageMatchField,
-              `${
-                inclusionOrFilter.RequestMatch.MatchType === "Exact"
-                  ? "="
-                  : "ilike"
-              }`,
-              `${
-                ["Exact", "CaseInsensitive"].includes(
-                  inclusionOrFilter.RequestMatch.MatchType
-                )
-                  ? inclusionOrFilter.RequestMatch.KeyWord
-                  : inclusionOrFilter.RequestMatch.MatchType === "StartsWith"
-                  ? `${inclusionOrFilter.RequestMatch.KeyWord}%`
-                  : `%${inclusionOrFilter.RequestMatch.KeyWord}%`
-              }`
-            )
-          );
+        switch (inclusionOrFilter.PackageMatchField) {
+          case "NormalizedPackageNameAndPublisher":
+            ors.push(
+              eb(
+                "PackageName",
+                "ilike",
+                `%${inclusionOrFilter.RequestMatch.KeyWord}%`
+              )
+            );
+            ors.push(
+              eb(
+                "Publisher",
+                "ilike",
+                `%${inclusionOrFilter.RequestMatch.KeyWord}%`
+              )
+            );
+            break;
+          case "Command":
+          case "Tag":
+            ors.push(
+              eb(
+                eb.val(inclusionOrFilter.RequestMatch.KeyWord),
+                "ilike",
+                // Table names are "Commands"/"Tags", not "Command"/"Tag"
+                eb.fn.any(`${inclusionOrFilter.PackageMatchField}s`)
+              )
+            );
+            break;
+          case "PackageFamilyName":
+          case "ProductCode":
+            ors.push(
+              eb(
+                eb.val(inclusionOrFilter.RequestMatch.KeyWord),
+                "ilike",
+                eb.fn.any(inclusionOrFilter.PackageMatchField)
+              )
+            );
+            break;
+          case "Market":
+            // we do not support filtering by market
+            break;
+          default:
+            ors.push(
+              eb(
+                inclusionOrFilter.PackageMatchField,
+                `${
+                  inclusionOrFilter.RequestMatch.MatchType === "Exact"
+                    ? "="
+                    : "ilike"
+                }`,
+                `${
+                  ["Exact", "CaseInsensitive"].includes(
+                    inclusionOrFilter.RequestMatch.MatchType
+                  )
+                    ? inclusionOrFilter.RequestMatch.KeyWord
+                    : inclusionOrFilter.RequestMatch.MatchType === "StartsWith"
+                    ? `${inclusionOrFilter.RequestMatch.KeyWord}%`
+                    : `%${inclusionOrFilter.RequestMatch.KeyWord}%`
+                }`
+              )
+            );
+            break;
         }
 
         return eb.or(ors);
