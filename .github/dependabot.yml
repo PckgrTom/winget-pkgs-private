@@ -16,10 +16,16 @@ updates:
     directory: /
     allow:
       - dependency-type: all
-    groups:
-      npm:
-        patterns: ['*']
     schedule:
       interval: daily
     rebase-strategy: auto
     target-branch: master
+
+  - package-ecosystem: gomod
+    directory: /api
+    allow:
+      - dependency-type: all
+    schedule:
+      interval: daily
+    rebase-strategy: auto
+    target-branch: main
