@@ -27,6 +27,12 @@ jobs:
           escape_json: false
       - name: List all changed files
         run: echo '${{ steps.changed-files.outputs.all_changed_files }}'
+      - name: More than 1 file changed
+        run: |
+          if [ $(echo '${{ steps.changed-files.outputs.all_changed_files }}' | jq '. | length') -gt 1 ]; then
+            echo "More than 1 installer manifest changed, exiting"
+            exit 1
+          fi
   scan:
     name: Scan
     runs-on: windows-latest
