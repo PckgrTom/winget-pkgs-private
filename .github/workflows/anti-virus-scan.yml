@@ -5,6 +5,9 @@ on:
       - master
     paths:
       - manifests/**
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
 jobs:
   changed-files:
     name: Get changed files
@@ -34,6 +37,8 @@ jobs:
     defaults:
       run:
         shell: pwsh
+    permissions:
+      pull-requests: write
     steps:
       - uses: actions/checkout@v4
       - run: Install-Module -Name powershell-yaml -Force -Scope CurrentUser -Repository PSGallery
@@ -91,3 +96,14 @@ jobs:
           "C:\Program Files\Windows Defender\MpCmdRun.exe" -SignatureUpdate -MMPC
           "C:\Program Files\Windows Defender\MpCmdRun.exe" -Scan -ScanType 1
         shell: cmd
+      - if: ${{ success() }}
+        run: gh pr edit $PR_NUMBER --add-label scan/passed
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - if: ${{ failure() }}
+        run: gh pr edit $PR_NUMBER --add-label scan/failed
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
