@@ -120,9 +120,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             );
             break;
         }
-
-        return eb.or(ors);
       }
+
+      return eb.or(ors);
     });
   }
 
