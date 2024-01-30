@@ -142,7 +142,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   let data: {}[] = [];
   for (const result of results) {
     let data_versions: {}[] = [];
-    result.PackageVersion.forEach((version) => {
+    for (const version of result.PackageVersion) {
       if (version === result.LatestVersion) {
         data_versions.push({
           PackageVersion: version,
@@ -156,7 +156,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           PackageVersion: version,
         });
       }
-    });
+    };
     data.push({
       PackageIdentifier: result.PackageIdentifier,
       PackageName: result.PackageName,
@@ -165,6 +165,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     });
   }
 
+  console.log(`Data: ${JSON.stringify(data, null, 0)}`);
   res.status(200).json({
     Data: data,
     UnsupportedPackageMatchFields: ["Market"],
