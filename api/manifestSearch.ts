@@ -142,7 +142,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   let data: {}[] = [];
   for (const result of results) {
     let data_versions: {}[] = [];
-    for (const version of result.PackageVersion) {
+    result.PackageVersion.forEach((version) => {
       if (version === result.LatestVersion) {
         data_versions.push({
           PackageVersion: version,
@@ -156,7 +156,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           PackageVersion: version,
         });
       }
-    }
+    });
     data.push({
       PackageIdentifier: result.PackageIdentifier,
       PackageName: result.PackageName,
