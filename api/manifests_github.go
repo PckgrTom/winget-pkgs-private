@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"archive/zip"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -21,6 +22,12 @@ type Manifest struct {
 	Content  string
 }
 
+var (
+	WINGET_PKGS_OWNER     = ""
+	WINGET_PKGS_REPO_NAME = os.Getenv("VERCEL_GIT_REPO_SLUG")
+	WINGET_PKGS_BRANCH    = os.Getenv("VERCEL_GIT_COMMIT_REF")
+)
+
 func ManifestsGithub(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		w.WriteHeader(http.StatusMethodNotAllowed)
@@ -29,7 +36,6 @@ func ManifestsGithub(w http.ResponseWriter, r *http.Request) {
 
 	ctx := context.Background()
 	var github_client *github.Client
-	var WINGET_PKGS_OWNER string
 
 	if val, ok := os.LookupEnv("GITHUB_PAT"); !ok {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -50,69 +56,110 @@ func ManifestsGithub(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	const WINGET_PKGS_REPO_NAME = "winget-pkgs-private"
-
 	pkg_id := r.URL.Query().Get("package_identifier")
-	if (pkg_id == "") {
+	if pkg_id == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("package_identifier query parameter is required"))
 		return
 	}
 
-	_, versions_in_dir, _, err := github_client.Repositories.GetContents(context.Background(), WINGET_PKGS_OWNER, WINGET_PKGS_REPO_NAME, getPackagePath(pkg_id, ""), nil)
+	res, err := http.Get(fmt.Sprintf("https://codeload.github.com/%s/%s/zip/refs/heads/%s", WINGET_PKGS_OWNER, WINGET_PKGS_REPO_NAME, WINGET_PKGS_BRANCH))
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(fmt.Sprintf("error getting package versions for %s: %s", pkg_id, err)))
+		w.Write([]byte(fmt.Sprintf("error getting source zip: %s", err)))
+		return
+	}
+	out, err := os.Create("/tmp/source.zip")
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprintf("error creating /tmp/source.zip file: %s", err)))
+		return
+	}
+	defer out.Close()
+	_, err = io.Copy(out, res.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprintf("error writing to /tmp/source.zip file: %s", err)))
 		return
 	}
 
-	pkg_versions := []string{}
-	commonly_ignored_versions := []string{"eap", "preview", "beta", "dev", "nightly", "canary", "insiders"}
-	for _, dir_content := range versions_in_dir {
-		if dir_content.GetType() == "dir" && !slices.Contains(commonly_ignored_versions, strings.ToLower(dir_content.GetName())) {
-			pkg_versions = append(pkg_versions, dir_content.GetName())
-		}
+	srcZip, err := zip.OpenReader("/tmp/source.zip")
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte(fmt.Sprintf("error opening source.zip for reading: %s", err)))
+		return
 	}
+
+	pkg_versions := getVersions(pkg_id, srcZip)
 
 	// sort and get latest version
 	sort.Sort(natural.StringSlice(pkg_versions))
 	version := pkg_versions[len(pkg_versions)-1]
 
-	_, dir_contents, _, err := github_client.Repositories.GetContents(context.Background(), WINGET_PKGS_OWNER, WINGET_PKGS_REPO_NAME, getPackagePath(pkg_id, version), nil)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte(fmt.Sprintf("error getting manifests for %s version %s: %s", pkg_id, version, err)))
-		return
-	}
-
-	manifests := []Manifest{}
-	for _, dir_content := range dir_contents {
-		res, err := http.Get(dir_content.GetDownloadURL())
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(fmt.Sprintf("error getting manifest %s: %s", dir_content.GetName(), err)))
-			return
-		}
-		manifest_raw, err := io.ReadAll(res.Body)
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte(fmt.Sprintf("error reading response body for manifest %s: %s", dir_content.GetName(), err)))
-			return
-		}
-		defer res.Body.Close()
-		manifests = append(manifests, Manifest{
-			FileName: getPackagePath(pkg_id, version, dir_content.GetName()),
-			Content:  string(manifest_raw),
-		})
-	}
+	manifests := getManifests(pkg_id, version, srcZip)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(manifests)
 }
 
+func getVersions(pkg_id string, zipFile *zip.ReadCloser) []string {
+	pkg_path := getPackagePath(pkg_id, "")
+	versions := []string{}
+	for _, file := range zipFile.File {
+		if !strings.HasPrefix(file.Name, pkg_path) || !file.Mode().IsDir() {
+			continue
+		}
+		version := strings.TrimPrefix(file.Name, pkg_path+"/")
+		if slices.Contains(versions, version) || version == "" {
+			continue
+		}
+		versions = append(versions, strings.TrimSuffix(version, "/"))
+	}
+	// remove sub-packages
+	for i := 0; i < len(versions); i++ {
+		is_sub_package := false
+		for j := 0; j < len(versions); j++ {
+			if strings.HasPrefix(versions[j], versions[i]) && versions[j] != versions[i] {
+				is_sub_package = true
+				versions = append(versions[:j], versions[j+1:]...)
+				j--
+			}
+		}
+		if is_sub_package {
+			versions = append(versions[:i], versions[i+1:]...)
+			i--
+		}
+	}
+	return versions
+}
+
+func getManifests(pkg_id, version string, zipFile *zip.ReadCloser) []Manifest {
+	pkg_path := getPackagePath(pkg_id, version)
+	manifests := []Manifest{}
+	for _, file := range zipFile.File {
+		if !strings.HasPrefix(file.Name, pkg_path) || !file.Mode().IsRegular() {
+			continue
+		}
+		rc, err := file.Open()
+		if err != nil {
+			return []Manifest{}
+		}
+		defer rc.Close()
+		bytes, err := io.ReadAll(rc)
+		if err != nil {
+			return []Manifest{}
+		}
+		manifests = append(manifests, Manifest{
+			FileName: strings.TrimPrefix(file.Name, fmt.Sprintf("%s-%s/", WINGET_PKGS_REPO_NAME, WINGET_PKGS_BRANCH)),
+			Content:  string(bytes),
+		})
+	}
+	return manifests
+}
+
 func getPackagePath(pkg_id, version string, fileName ...string) string {
-	pkg_path := fmt.Sprintf("manifests/%s/%s", strings.ToLower(pkg_id[0:1]), strings.ReplaceAll(pkg_id, ".", "/"))
+	pkg_path := fmt.Sprintf("%s-%s/manifests/%s/%s", WINGET_PKGS_REPO_NAME, WINGET_PKGS_BRANCH, strings.ToLower(pkg_id[0:1]), strings.ReplaceAll(pkg_id, ".", "/"))
 	if len(version) > 0 {
 		pkg_path += "/" + version
 	}
