@@ -117,9 +117,10 @@ func getVersions(pkg_id string, zipFile *zip.ReadCloser) []string {
 
 func getManifests(pkg_id, version string, zipFile *zip.ReadCloser) []Manifest {
 	pkg_path := getPackagePath(pkg_id, version)
+	version_manfiest_path := getPackagePath(pkg_id, version, fmt.Sprintf("%s.yaml", pkg_id))
 	manifests := []Manifest{}
 	for _, file := range zipFile.File {
-		if !strings.HasPrefix(file.Name, pkg_path) || !file.Mode().IsRegular() {
+		if !strings.HasPrefix(file.Name, pkg_path) || !file.Mode().IsRegular() || file.Name == version_manfiest_path {
 			continue
 		}
 		rc, err := file.Open()
