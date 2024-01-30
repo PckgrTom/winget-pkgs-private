@@ -104,7 +104,7 @@ jobs:
           "C:\Program Files\Windows Defender\MpCmdRun.exe" -SignatureUpdate -MMPC
           "C:\Program Files\Windows Defender\MpCmdRun.exe" -Scan -ScanType 1
         shell: cmd
-      - if: ${{ always() && !contains(fromJson('["dependencies","PckgrBot","PckgrTom","vedantmgoyal2009"]'), github.event.pull_request.user.login) }}
+      - if: ${{ always() && !contains(fromJson('["dependabot","PckgrBot","PckgrTom","vedantmgoyal2009"]'), github.event.pull_request.user.login) }}
         run: gh pr edit $env:PR --add-label automerge/skip
         env:
           PR: ${{ github.event.pull_request.html_url }}
