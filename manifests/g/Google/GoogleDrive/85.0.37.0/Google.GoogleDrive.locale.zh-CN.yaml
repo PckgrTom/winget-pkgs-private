@@ -1,4 +1,4 @@
-# Created with YamlCreate.ps1 v2.2.12 by Dumplings $debug=QUSU.CRLF.7-2-18.Win32NT
+# Created using wingetcreate 1.5.7.0
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.locale.1.5.0.schema.json
 
 PackageIdentifier: Google.GoogleDrive
@@ -14,10 +14,8 @@ PackageUrl: https://www.google.com/drive/download/
 License: 专有软件
 LicenseUrl: https://www.google.com/drive/terms-of-service/
 Copyright: Copyright(c) 2024 Google LLC. 保留所有权利。
-# CopyrightUrl:
 ShortDescription: 安全存储文件，且可以通过任意设备访问
 Description: 在计算机上选择要同步到 Google 云端硬盘或备份到 Google 相册的文件夹，然后直接通过 PC 或 Mac 访问您的所有内容
-# Moniker:
 Tags:
 - 上传
 - 下载
@@ -29,11 +27,5 @@ Tags:
 - 备份
 - 文件
 - 网盘
-# ReleaseNotes:
-# ReleaseNotesUrl:
-# PurchaseUrl:
-# InstallationNotes:
-# Documentations:
 ManifestType: locale
 ManifestVersion: 1.5.0
-

@@ -1,4 +1,4 @@
-# Created with YamlCreate.ps1 v2.2.12 by Dumplings $debug=QUSU.CRLF.7-2-18.Win32NT
+# Created using wingetcreate 1.5.7.0
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.5.0.schema.json
 
 PackageIdentifier: Google.GoogleDrive
@@ -14,7 +14,6 @@ PackageUrl: https://www.google.com/drive/download/
 License: Proprietary
 LicenseUrl: https://www.google.com/drive/terms-of-service/
 Copyright: Copyright(c) 2024 Google LLC. All Rights Reserved.
-# CopyrightUrl:
 ShortDescription: Safely store your files and access them from any device
 Description: Choose folders on your computer to sync with Google Drive or backup to Google Photos, and access all of your content directly from your PC or Mac
 Moniker: google-drive
@@ -29,11 +28,5 @@ Tags:
 - share
 - sync
 - upload
-# ReleaseNotes:
-# ReleaseNotesUrl:
-# PurchaseUrl:
-# InstallationNotes:
-# Documentations:
 ManifestType: defaultLocale
 ManifestVersion: 1.5.0
-
