@@ -2,7 +2,6 @@ package handler
 
 import (
 	"archive/zip"
-	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -12,9 +11,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/google/go-github/v58/github"
 	"github.com/maruel/natural"
-	"golang.org/x/oauth2"
 )
 
 type Manifest struct {
@@ -23,7 +20,7 @@ type Manifest struct {
 }
 
 var (
-	WINGET_PKGS_OWNER     = ""
+	WINGET_PKGS_OWNER     = os.Getenv("VERCEL_GIT_REPO_OWNER")
 	WINGET_PKGS_REPO_NAME = os.Getenv("VERCEL_GIT_REPO_SLUG")
 	WINGET_PKGS_BRANCH    = os.Getenv("VERCEL_GIT_COMMIT_REF")
 )
@@ -32,28 +29,6 @@ func ManifestsGithub(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		w.WriteHeader(http.StatusMethodNotAllowed)
 		return
-	}
-
-	ctx := context.Background()
-	var github_client *github.Client
-
-	if val, ok := os.LookupEnv("GITHUB_PAT"); !ok {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("GITHUB_PAT environment variable is not set."))
-		return
-	} else {
-		ts := oauth2.StaticTokenSource(
-			&oauth2.Token{AccessToken: val},
-		)
-		tc := oauth2.NewClient(ctx, ts)
-		github_client = github.NewClient(tc)
-		if user, _, err := github_client.Users.Get(context.Background(), ""); err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			w.Write([]byte("Invalid GitHub token"))
-			return
-		} else {
-			WINGET_PKGS_OWNER = user.GetLogin() // get winget-pkgs owner from token
-		}
 	}
 
 	pkg_id := r.URL.Query().Get("package_identifier")
