@@ -2,10 +2,7 @@ module github.com/vedantmgoyal2009/winget-pkgs-pckgr
 
 go 1.21
 
-require (
-	github.com/maruel/natural v1.1.1
-	sigs.k8s.io/kustomize/kyaml v0.16.0
-)
+require sigs.k8s.io/kustomize/kyaml v0.16.0
 
 require (
 	github.com/davecgh/go-spew v1.1.1 // indirect

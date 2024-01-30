@@ -8,16 +8,8 @@ import (
 	"net/http"
 	"os"
 	"slices"
-	"sort"
 	"strings"
-
-	"github.com/maruel/natural"
 )
-
-type Manifest struct {
-	FileName string
-	Content  string
-}
 
 var (
 	WINGET_PKGS_OWNER     = os.Getenv("VERCEL_GIT_REPO_OWNER")
@@ -67,15 +59,31 @@ func ManifestsGithub(w http.ResponseWriter, r *http.Request) {
 
 	pkg_versions := getVersions(pkg_id, srcZip)
 
-	// sort and get latest version
-	sort.Sort(natural.StringSlice(pkg_versions))
-	version := pkg_versions[len(pkg_versions)-1]
+	result := []VersionAndManifests{}
 
-	manifests := getManifests(pkg_id, version, srcZip)
+	for _, version := range pkg_versions {
+		manifests := getManifests(pkg_id, version, srcZip)
+		for _, manifest := range manifests {
+			result = append(result, VersionAndManifests{
+				Version: version,
+				Manifests:      []Manifest{manifest},
+			})
+		}
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(manifests)
+	json.NewEncoder(w).Encode(result)
+}
+
+type VersionAndManifests struct {
+	Version string
+	Manifests      []Manifest
+}
+
+type Manifest struct {
+	FileName string
+	Content  string
 }
 
 func getVersions(pkg_id string, zipFile *zip.ReadCloser) []string {
