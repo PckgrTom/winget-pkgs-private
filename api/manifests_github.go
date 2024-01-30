@@ -63,12 +63,10 @@ func ManifestsGithub(w http.ResponseWriter, r *http.Request) {
 
 	for _, version := range pkg_versions {
 		manifests := getManifests(pkg_id, version, srcZip)
-		for _, manifest := range manifests {
-			result = append(result, VersionAndManifests{
-				Version: version,
-				Manifests:      []Manifest{manifest},
-			})
-		}
+		result = append(result, VersionAndManifests{
+			Version:   version,
+			Manifests: manifests,
+		})
 	}
 
 	w.Header().Set("Content-Type", "application/json")
@@ -77,8 +75,8 @@ func ManifestsGithub(w http.ResponseWriter, r *http.Request) {
 }
 
 type VersionAndManifests struct {
-	Version string
-	Manifests      []Manifest
+	Version   string
+	Manifests []Manifest
 }
 
 type Manifest struct {
