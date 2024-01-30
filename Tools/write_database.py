@@ -37,7 +37,8 @@ cur.execute("""
     DROP TABLE IF EXISTS packages;
     CREATE TABLE packages (
         "PackageIdentifier" TEXT PRIMARY KEY,
-        "PackageVersion" TEXT NOT NULL,
+        "PackageVersion" TEXT[] NOT NULL,
+        "LatestVersion" TEXT NOT NULL,
         "PackageName" TEXT NOT NULL,
         "Publisher" TEXT NOT NULL,
         "Moniker" TEXT,

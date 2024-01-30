@@ -141,19 +141,27 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   let data: {}[] = [];
   for (const result of results) {
-    data.push({
-      PackageIdentifier: result.PackageIdentifier,
-      PackageName: result.PackageName,
-      Publisher: result.Publisher,
-      Versions: [
-        {
-          PackageVersion: result.PackageVersion,
+    let data_versions: {}[] = [];
+    for (const version of result.PackageVersion) {
+      if (version === result.LatestVersion) {
+        data_versions.push({
+          PackageVersion: version,
           // note: it is "PackageFamilyNames" not "PackageFamilyName
           PackageFamilyNames: result.PackageFamilyName,
           // note: it is "ProductCodes" not "ProductCode"
           ProductCodes: result.ProductCode,
-        },
-      ],
+        });
+      } else {
+        data_versions.push({
+          PackageVersion: version,
+        });
+      }
+    }
+    data.push({
+      PackageIdentifier: result.PackageIdentifier,
+      PackageName: result.PackageName,
+      Publisher: result.Publisher,
+      Versions: data_versions,
     });
   }
 
@@ -169,7 +177,8 @@ interface Database {
 
 interface PackagesTable {
   PackageIdentifier: string;
-  PackageVersion: string;
+  PackageVersion: string[];
+  LatestVersion: string;
   PackageName: string;
   Publisher: string;
   Moniker: string;

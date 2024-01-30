@@ -59,8 +59,13 @@ foreach ($package in $PackagesAndVersions.Keys) {
     $latestVersion = Get-LatestVersion -versions $versions
     $latestVersionName = Split-Path -Path $latestVersion -Leaf
     Write-Host "Latest version of $package is $latestVersionName"
-
-    $data = @{}
+    $packageVersions = $versions | ForEach-Object { 
+        Split-Path -Path $_ -Leaf 
+    }
+    if ($packageVersions -is [string]) {
+        $packageVersions = @($packageVersions)
+    }
+    $data = @{ PackageVersion = $packageVersions; LatestVersion = $latestVersionName }
     $manifestfiles = Get-ChildItem -Path $latestVersion -Filter '*.yaml' -File
     foreach ($manifestfile in $manifestfiles) {
         $manifest = Get-Content -Path $manifestfile.FullName -Raw | ConvertFrom-Yaml
@@ -84,7 +89,6 @@ foreach ($package in $PackagesAndVersions.Keys) {
             'defaultLocale' {
                 $data['PackageIdentifier'] = $manifest.PackageIdentifier
                 $data['PackageName'] = $manifest.PackageName
-                $data['PackageVersion'] = $manifest.PackageVersion
                 $data['Publisher'] = $manifest.Publisher
                 $data['Moniker'] = $manifest.Moniker
                 $data['Tags'] = $manifest.Tags | Select-Object -Unique

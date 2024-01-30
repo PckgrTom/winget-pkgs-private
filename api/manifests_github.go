@@ -29,6 +29,7 @@ func ManifestsGithub(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("package_identifier query parameter is required"))
 		return
 	}
+	include_version_manifest := r.URL.Query().Get("include_version_manifest") == "true"
 
 	res, err := http.Get(fmt.Sprintf("https://codeload.github.com/%s/%s/zip/refs/heads/%s", WINGET_PKGS_OWNER, WINGET_PKGS_REPO_NAME, WINGET_PKGS_BRANCH))
 	if err != nil {
@@ -62,7 +63,7 @@ func ManifestsGithub(w http.ResponseWriter, r *http.Request) {
 	result := []VersionAndManifests{}
 
 	for _, version := range pkg_versions {
-		manifests := getManifests(pkg_id, version, srcZip)
+		manifests := getManifests(pkg_id, version, srcZip, include_version_manifest)
 		result = append(result, VersionAndManifests{
 			Version:   version,
 			Manifests: manifests,
@@ -115,12 +116,12 @@ func getVersions(pkg_id string, zipFile *zip.ReadCloser) []string {
 	return versions
 }
 
-func getManifests(pkg_id, version string, zipFile *zip.ReadCloser) []Manifest {
+func getManifests(pkg_id, version string, zipFile *zip.ReadCloser, include_version_manifest bool) []Manifest {
 	pkg_path := getPackagePath(pkg_id, version)
 	version_manfiest_path := getPackagePath(pkg_id, version, fmt.Sprintf("%s.yaml", pkg_id))
 	manifests := []Manifest{}
 	for _, file := range zipFile.File {
-		if !strings.HasPrefix(file.Name, pkg_path) || !file.Mode().IsRegular() || file.Name == version_manfiest_path {
+		if !strings.HasPrefix(file.Name, pkg_path) || !file.Mode().IsRegular() || (!include_version_manifest && file.Name == version_manfiest_path) {
 			continue
 		}
 		rc, err := file.Open()
