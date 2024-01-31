@@ -13,7 +13,7 @@ version = 1
 
 # By default, Kodiak will only act on PRs that have this label. You can disable
 # this requirement via `merge.require_automerge_label`.
-automerge_label = ["scan/passed", "dependencies"] # default: "automerge"
+automerge_label = ["scan/passed", "automerge/force", "dependencies"] # default: "automerge"
 
 # Require that the automerge label (`merge.automerge_label`) be set for Kodiak
 # to merge a PR.
@@ -68,4 +68,4 @@ auto_approve_usernames = ["dependabot"] # default: []
 
 # If a PR has a label assigned which is in the `approve.auto_approve_labels` list,
 # Kodiak will automatically add an approval to the PR.
-auto_approve_labels = ["scan/passed"] # default: []
+auto_approve_labels = ["scan/passed", "automerge/force"] # default: []
