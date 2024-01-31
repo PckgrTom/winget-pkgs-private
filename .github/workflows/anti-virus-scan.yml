@@ -96,7 +96,7 @@ jobs:
           }
       - name: Run winget install
         run: |
-          winget install --manifest '${{ steps.parent-dir.outputs.parent-dir }}' --accept-package-agreements --accept-source-agreements --silent
+          winget install --manifest '${{ steps.parent-dir.outputs.parent-dir }}' --disable-interactivity --accept-source-agreements --accept-package-agreements
           If ($LASTEXITCODE -ne 0) {
             Write-Error 'Install failed for ${{ steps.parent-dir.outputs.parent-dir }}'
             exit 1
