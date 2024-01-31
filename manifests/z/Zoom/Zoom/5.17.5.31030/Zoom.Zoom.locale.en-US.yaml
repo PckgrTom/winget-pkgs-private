@@ -1,4 +1,4 @@
-# Created with YamlCreate.ps1 v2.2.12 by Dumplings $debug=QUSU.CRLF.7-4-1.Win32NT
+# Created using wingetcreate 1.5.7.0
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.5.0.schema.json
 
 PackageIdentifier: Zoom.Zoom
@@ -14,10 +14,8 @@ PackageUrl: https://zoom.us
 License: Proprietary
 LicenseUrl: https://explore.zoom.us/en/terms
 Copyright: Copyright ©2012-2024 Zoom Video Communications, Inc. All rights reserved.
-# CopyrightUrl:
 ShortDescription: Team Chat, Phone, Video & More
 Description: Zoom's secure, reliable video platform powers all of your communication needs, including meetings, chat, phone, webinars, and online events.
-# Moniker:
 Tags:
 - chat
 - collaborate
@@ -57,12 +55,9 @@ ReleaseNotes: |-
   - Resolved an issue with presence status not syncing properly within Zoom Phone call history
   - Resolved an issue regarding incoming Zoom calls inadvertently disconnecting an active Teams meeting
   - Resolved an issue regarding calls from a queue not being routed to available agents
-# ReleaseNotesUrl:
 PurchaseUrl: https://zoom.us/pricing
-# InstallationNotes:
 Documentations:
 - DocumentLabel: Learning Center
   DocumentUrl: https://learning.zoom.us/learn
 ManifestType: defaultLocale
 ManifestVersion: 1.5.0
-
