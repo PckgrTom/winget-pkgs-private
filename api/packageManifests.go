@@ -42,12 +42,6 @@ func PackageManifests(w http.ResponseWriter, r *http.Request) {
 		var locales []interface{}
 		for _, manifest_raw := range resp.Manifests {
 			manifest := yaml.MustParse(manifest_raw.Content + "\n---\n")
-
-			manifest.PipeE(yaml.Clear("PackageIdentifier"))
-			manifest.PipeE(yaml.Clear("PackageVersion"))
-			manifest.PipeE(yaml.Clear("ManifestType"))
-			manifest.PipeE(yaml.Clear("ManifestVersion"))
-
 			switch manifest.Field("ManifestType").Value.YNode().Value {
 			case "installer":
 				// copy from root level to installer level
@@ -92,8 +86,18 @@ func PackageManifests(w http.ResponseWriter, r *http.Request) {
 				installers_new, _ := manifest.Pipe(yaml.Get("Installers"))
 				yaml.Unmarshal([]byte(installers_new.MustString()), &installers)
 			case "defaultLocale":
+				manifest.PipeE(yaml.Clear("PackageIdentifier"))
+				manifest.PipeE(yaml.Clear("PackageVersion"))
+				manifest.PipeE(yaml.Clear("ManifestType"))
+				manifest.PipeE(yaml.Clear("ManifestVersion"))
+
 				yaml.Unmarshal([]byte(manifest.MustString()), &default_locale)
 			case "locale":
+				manifest.PipeE(yaml.Clear("PackageIdentifier"))
+				manifest.PipeE(yaml.Clear("PackageVersion"))
+				manifest.PipeE(yaml.Clear("ManifestType"))
+				manifest.PipeE(yaml.Clear("ManifestVersion"))
+
 				var locale interface{}
 				yaml.Unmarshal([]byte(manifest.MustString()), &locale)
 				locales = append(locales, locale)
