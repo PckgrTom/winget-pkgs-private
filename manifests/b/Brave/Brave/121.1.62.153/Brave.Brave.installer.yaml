@@ -1,4 +1,4 @@
-# Created with YamlCreate.ps1 v2.2.12 by Dumplings $debug=QUSU.CRLF.7-2-18.Win32NT
+# Created using wingetcreate 1.5.7.0
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.5.0.schema.json
 
 PackageIdentifier: Brave.Brave
@@ -33,7 +33,6 @@ FileExtensions:
 - webp
 - xht
 - xhtml
-ReleaseDate: 2024-01-25
 Installers:
 - Architecture: x86
   Scope: user
@@ -79,4 +78,4 @@ Installers:
   ProductCode: BraveSoftware Brave-Browser
 ManifestType: installer
 ManifestVersion: 1.5.0
-
+ReleaseDate: 2024-01-25
