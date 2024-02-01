@@ -22,6 +22,6 @@ ElevationRequirement: elevatesSelf
 Installers:
 - Architecture: x64
   InstallerUrl: https://desktop.docker.com/win/main/amd64/136059/Docker%20Desktop%20Installer.exe
-  InstallerSha256: B4FAD4AA2EBBE2DFF0728B260D8564AC8A0A7C56794E395B8FAA9FF38FAB41EE
+  InstallerSha256: 378568E64CB76D65236DF258120D5270BE8B9F486B4A1EE5C2D8A7492EEEFA2F
 ManifestType: installer
 ManifestVersion: 1.5.0
