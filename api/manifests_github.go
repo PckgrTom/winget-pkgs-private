@@ -92,9 +92,10 @@ type Manifest struct {
 
 func getVersions(pkg_id string, zipFile *zip.ReadCloser) []string {
 	pkg_path := getPackagePath(pkg_id, "")
+	pkg_path_lower := strings.ToLower(pkg_path)
 	versions := []string{}
 	for _, file := range zipFile.File {
-		if !strings.HasPrefix(strings.ToLower(file.Name), strings.ToLower(pkg_path)) || !file.Mode().IsDir() {
+		if !strings.HasPrefix(strings.ToLower(file.Name), pkg_path_lower) || !file.Mode().IsDir() {
 			continue
 		}
 		version := strings.TrimPrefix(file.Name, pkg_path+"/")
@@ -123,10 +124,11 @@ func getVersions(pkg_id string, zipFile *zip.ReadCloser) []string {
 
 func getManifests(pkg_id, version string, zipFile *zip.ReadCloser, include_version_manifest bool) []Manifest {
 	pkg_path := getPackagePath(pkg_id, version)
+	pkg_path_lower := strings.ToLower(pkg_path)
 	version_manfiest_path := getPackagePath(pkg_id, version, fmt.Sprintf("%s.yaml", pkg_id))
 	manifests := []Manifest{}
 	for _, file := range zipFile.File {
-		if !strings.HasPrefix(strings.ToLower(file.Name), strings.ToLower(pkg_path)) || !file.Mode().IsRegular() || (!include_version_manifest && file.Name == version_manfiest_path) {
+		if !strings.HasPrefix(strings.ToLower(file.Name), pkg_path_lower) || !file.Mode().IsRegular() || (!include_version_manifest && file.Name == version_manfiest_path) {
 			continue
 		}
 		rc, err := file.Open()
