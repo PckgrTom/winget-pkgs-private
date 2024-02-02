@@ -89,7 +89,7 @@ func getVersions(pkg_id string, zipFile *zip.ReadCloser) []string {
 	pkg_path := getPackagePath(pkg_id, "")
 	versions := []string{}
 	for _, file := range zipFile.File {
-		if !strings.HasPrefix(file.Name, pkg_path) || !file.Mode().IsDir() {
+		if !strings.HasPrefix(strings.ToLower(file.Name), strings.ToLower(pkg_path)) || !file.Mode().IsDir() {
 			continue
 		}
 		version := strings.TrimPrefix(file.Name, pkg_path+"/")
@@ -121,7 +121,7 @@ func getManifests(pkg_id, version string, zipFile *zip.ReadCloser, include_versi
 	version_manfiest_path := getPackagePath(pkg_id, version, fmt.Sprintf("%s.yaml", pkg_id))
 	manifests := []Manifest{}
 	for _, file := range zipFile.File {
-		if !strings.HasPrefix(file.Name, pkg_path) || !file.Mode().IsRegular() || (!include_version_manifest && file.Name == version_manfiest_path) {
+		if !strings.HasPrefix(strings.ToLower(file.Name), strings.ToLower(pkg_path)) || !file.Mode().IsRegular() || (!include_version_manifest && file.Name == version_manfiest_path) {
 			continue
 		}
 		rc, err := file.Open()
