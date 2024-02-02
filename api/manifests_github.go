@@ -59,6 +59,11 @@ func ManifestsGithub(w http.ResponseWriter, r *http.Request) {
 	}
 
 	pkg_versions := getVersions(pkg_id, srcZip)
+	if len(pkg_versions) == 0 {
+		w.WriteHeader(http.StatusNotFound)
+		w.Write([]byte(fmt.Sprintf("package %s not found", pkg_id)))
+		return
+	}
 
 	result := []VersionAndManifests{}
 
