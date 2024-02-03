@@ -16,5 +16,3 @@ ReleaseNotes: '- Adds compatibility with WebAuthn on the npm registry'
 ReleaseNotesUrl: https://github.com/yarnpkg/yarn/releases/tag/v1.22.19
 ManifestType: defaultLocale
 ManifestVersion: 1.5.0
-
-

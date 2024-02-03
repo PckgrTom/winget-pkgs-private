@@ -34,5 +34,3 @@ ReleaseNotesUrl: https://github.com/gitextensions/gitextensions/releases/tag/v4.
 InstallationNotes: This package also requires .Net Desktop Runtime 6 (Microsoft.DotNet.DesktopRuntime.6) and git (Git.Git) to work.
 ManifestType: defaultLocale
 ManifestVersion: 1.5.0
-
-

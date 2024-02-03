@@ -22,5 +22,3 @@ ReleaseNotesUrl: https://learn.microsoft.com/en-us/cli/azure/release-notes-azure
 ManifestType: defaultLocale
 ManifestVersion: 1.2.0
 InstallationNotes: "Winget installs the 64-bit CLI on 64-bit OS by default now. If you have used the 32-bit CLI before, please follow this guide to migrate to 64-bit version: https://learn.microsoft.com/cli/azure/install-azure-cli-windows#migrate-to-64-bit-azure-cli"
-
-

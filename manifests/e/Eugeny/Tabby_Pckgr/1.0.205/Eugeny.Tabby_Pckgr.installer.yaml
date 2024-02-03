@@ -36,5 +36,3 @@ UpgradeBehavior: install
 FileExtensions:
 - yaml
 ReleaseDate: "2023-11-21"
-
-

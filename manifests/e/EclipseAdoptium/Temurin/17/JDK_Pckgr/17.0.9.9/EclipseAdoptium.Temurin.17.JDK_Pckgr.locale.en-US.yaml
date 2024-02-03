@@ -24,5 +24,3 @@ ReleaseNotes: Official Release of jdk-17.0.9+9.1
 ReleaseNotesUrl: https://github.com/adoptium/temurin17-binaries/releases/tag/jdk-17.0.9+9.1
 ManifestType: defaultLocale
 ManifestVersion: 1.5.0
-
-

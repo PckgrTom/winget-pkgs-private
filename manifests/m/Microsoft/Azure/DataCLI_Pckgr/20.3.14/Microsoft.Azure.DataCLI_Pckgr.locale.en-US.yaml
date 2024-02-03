@@ -17,5 +17,3 @@ ShortDescription: A command-line utility written in Python to bootstrap and mana
 Moniker: azdata
 ManifestType: defaultLocale
 ManifestVersion: 1.4.0
-
-

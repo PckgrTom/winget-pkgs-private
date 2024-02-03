@@ -19,5 +19,3 @@ InstallerType: inno
 InstallerSwitches:
   Custom: /CURRENTUSER
 ReleaseDate: "2023-01-17"
-
-

@@ -21,5 +21,3 @@ Installers:
     ReturnResponseUrl: https://ch0.co/cli-msi
 ManifestType: installer
 ManifestVersion: 1.4.0
-
-

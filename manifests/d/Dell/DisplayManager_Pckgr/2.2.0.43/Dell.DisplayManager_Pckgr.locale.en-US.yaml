@@ -16,5 +16,3 @@ ShortDescription: Dell Display Manager enhances everyday productivity through co
 InstallationNotes: This package also requires .Net Desktop Runtime 5 (Microsoft.DotNet.DesktopRuntime.5) to work.
 ManifestType: defaultLocale
 ManifestVersion: 1.5.0
-
-

@@ -15,5 +15,3 @@ ShortDescription: Splashtop Streamer - Enables Your PC for Remote Access
 Description: Install the Splashtop Streamer on any computers that you want to remotely access, view, and control from another device using the Splashtop app. Set up the streamer with a Splashtop account and password.
 ManifestType: defaultLocale
 ManifestVersion: 1.5.0
-
-

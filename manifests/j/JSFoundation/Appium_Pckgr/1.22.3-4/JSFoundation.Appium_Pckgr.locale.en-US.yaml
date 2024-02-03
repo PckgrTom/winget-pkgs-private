@@ -28,5 +28,3 @@ ReleaseNotes: '- Fixed signature issue in v1.22.3.'
 ReleaseNotesUrl: https://github.com/appium/appium-desktop/releases/tag/v1.22.3-4
 ManifestType: defaultLocale
 ManifestVersion: 1.4.0
-
-

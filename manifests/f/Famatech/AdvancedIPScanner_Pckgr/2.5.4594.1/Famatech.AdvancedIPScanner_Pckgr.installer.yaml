@@ -19,6 +19,3 @@ Installers:
       InstallerType: wix
 ManifestType: installer
 ManifestVersion: 1.1.0
-
-
-

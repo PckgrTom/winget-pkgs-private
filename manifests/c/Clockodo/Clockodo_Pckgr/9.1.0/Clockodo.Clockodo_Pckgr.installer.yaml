@@ -24,5 +24,3 @@ Installers:
     Custom: /S /ALLUSERS=1 /D="C:\Program Files\Clockodo"
 ManifestType: installer
 ManifestVersion: 1.5.0
-
-

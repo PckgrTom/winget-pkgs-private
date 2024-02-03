@@ -27,5 +27,3 @@ ReleaseNotes: '- fixed a security issue with the HTTP server.'
 ReleaseNotesUrl: https://www.voidtools.com/Changes.txt
 ManifestType: defaultLocale
 ManifestVersion: 1.4.0
-
-

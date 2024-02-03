@@ -25,5 +25,3 @@ Installers:
   - InstallerType: msi
 ManifestType: installer
 ManifestVersion: 1.2.0
-
-

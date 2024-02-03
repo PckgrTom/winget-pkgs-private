@@ -10,5 +10,3 @@ License: https://aws.amazon.com/agreement/
 ShortDescription: Securely access AWS resources and resources in your on-premises network.
 ManifestType: defaultLocale
 ManifestVersion: 1.5.0
-
-

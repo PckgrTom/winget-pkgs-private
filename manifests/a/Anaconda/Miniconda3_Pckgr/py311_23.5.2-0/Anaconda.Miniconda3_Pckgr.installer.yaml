@@ -32,5 +32,3 @@ Installers:
     Custom: /InstallationType=AllUsers /AddToPath=1 /RegisterPython=1
 ManifestType: installer
 ManifestVersion: 1.4.0
-
-
