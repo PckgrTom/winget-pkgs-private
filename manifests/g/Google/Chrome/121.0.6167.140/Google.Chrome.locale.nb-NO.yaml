@@ -1,7 +1,7 @@
 # Created using wingetcreate 1.5.7.0
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.locale.1.5.0.schema.json
 
-PackageIdentifier: Google.Chrome
+PackageIdentifier: Google.Chrome_Pckgr
 PackageVersion: 121.0.6167.140
 PackageLocale: nb-NO
 Publisher: Google LLC
