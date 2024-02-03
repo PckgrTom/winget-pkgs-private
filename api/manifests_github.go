@@ -24,6 +24,7 @@ func ManifestsGithub(w http.ResponseWriter, r *http.Request) {
 	}
 
 	pkg_id := r.URL.Query().Get("package_identifier")
+	pkg_id = strings.ToLower(pkg_id)
 	if pkg_id == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte("package_identifier query parameter is required"))
@@ -92,13 +93,13 @@ type Manifest struct {
 
 func getVersions(pkg_id string, zipFile *zip.ReadCloser) []string {
 	pkg_path := getPackagePath(pkg_id, "")
-	pkg_path_lower := strings.ToLower(pkg_path)
 	versions := []string{}
 	for _, file := range zipFile.File {
-		if !strings.HasPrefix(strings.ToLower(file.Name), pkg_path_lower) || !file.Mode().IsDir() {
+		file_name_lower := strings.ToLower(file.Name)
+		if !strings.HasPrefix(file_name_lower, pkg_path) || !file.Mode().IsDir() {
 			continue
 		}
-		version := strings.TrimPrefix(file.Name, pkg_path+"/")
+		version := file.Name[len(pkg_path)+1:]
 		if slices.Contains(versions, version) || version == "" {
 			continue
 		}
@@ -124,11 +125,11 @@ func getVersions(pkg_id string, zipFile *zip.ReadCloser) []string {
 
 func getManifests(pkg_id, version string, zipFile *zip.ReadCloser, include_version_manifest bool) []Manifest {
 	pkg_path := getPackagePath(pkg_id, version)
-	pkg_path_lower := strings.ToLower(pkg_path)
 	version_manfiest_path := getPackagePath(pkg_id, version, fmt.Sprintf("%s.yaml", pkg_id))
 	manifests := []Manifest{}
 	for _, file := range zipFile.File {
-		if !strings.HasPrefix(strings.ToLower(file.Name), pkg_path_lower) || !file.Mode().IsRegular() || (!include_version_manifest && file.Name == version_manfiest_path) {
+		file_name_lower := strings.ToLower(file.Name)
+		if !strings.HasPrefix(file_name_lower, pkg_path) || !file.Mode().IsRegular() || (!include_version_manifest && file_name_lower == version_manfiest_path) {
 			continue
 		}
 		rc, err := file.Open()
