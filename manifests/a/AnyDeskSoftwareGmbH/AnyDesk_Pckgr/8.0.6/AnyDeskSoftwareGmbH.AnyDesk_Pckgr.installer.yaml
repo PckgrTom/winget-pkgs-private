@@ -13,21 +13,6 @@ InstallModes:
 ReleaseDate: 2023-11-09
 Installers:
 - Architecture: x86
-  InstallerType: exe
-  InstallerUrl: https://download.anydesk.com/AnyDesk.exe
-  InstallerSha256: EC33D8EE9C3881B8FCEA18F9F862D5926D994553AEC1B65081D925AFD3E8B028
-  InstallerSwitches:
-    Silent: --silent
-    SilentWithProgress: --silent
-    Upgrade: --remove-first
-    Custom: --install "C:\Program Files (x86)\AnyDesk" --update-auto --create-desktop-icon --create-shortcuts
-  UpgradeBehavior: install
-  AppsAndFeaturesEntries:
-  - DisplayVersion: ad 8.0.6
-    ProductCode: AnyDesk
-    InstallerType: exe
-  ElevationRequirement: elevationRequired
-- Architecture: x86
   InstallerType: wix
   InstallerUrl: https://download.anydesk.com/AnyDesk.exe
   InstallerSha256: EC33D8EE9C3881B8FCEA18F9F862D5926D994553AEC1B65081D925AFD3E8B028
