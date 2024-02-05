@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"slices"
 
 	"sigs.k8s.io/kustomize/kyaml/yaml"
@@ -24,7 +25,7 @@ func PackageManifests(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response := []ApiResponse{}
-	res, err := http.Get("https://winget-pkgs-private.vercel.app/api/manifests_github?package_identifier=" + pkg_id)
+	res, err := http.Get(os.Getenv("API_URL") + "/manifests_github?package_identifier=" + pkg_id)
 	// error will only be of type *url.Error, so added check for status code as well
 	if err != nil || res.StatusCode != http.StatusOK {
 		// we assume that the error is because the package was not found because
