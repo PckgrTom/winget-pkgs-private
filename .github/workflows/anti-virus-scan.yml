@@ -79,7 +79,7 @@ jobs:
           $done = @()
           $installers = Get-Content '${{ matrix.file }}' | ConvertFrom-Yaml | Select-Object -ExpandProperty Installers
           Write-Output " Found $($installerUrls.Count) installer urls"
-          $installerUrls | ForEach-Object {
+          $installers | ForEach-Object {
             if ($done -contains $_.InstallerUrl) {
               Write-Output " - [Skipping] Already processed $($_.InstallerUrl)"
               return
