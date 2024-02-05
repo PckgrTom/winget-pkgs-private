@@ -46,11 +46,6 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - if: ${{ contains(github.event.issue.labels.*.name, 'installer-hash-mismatch') }}
-        run: gh pr edit $env:PR --remove-label installer-hash-mismatch
-        env:
-          PR: ${{ github.event.pull_request.html_url }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
@@ -89,7 +84,7 @@ jobs:
             Invoke-WebRequest -Uri $_.InstallerUrl -OutFile $tempFile
             $fileName = $tempFile.FullName
             Write-Output " - Downloaded to $fileName"
-            $hash = Get-FileHash -Path $fileName -Algorithm SHA256
+            $hash = Get-FileHash -Path $fileName -Algorithm SHA256 | Select-Object -ExpandProperty Hash
             Write-Output " - Detected sha-256 hash: $hash"
             Write-Output " - Installer hash in manifest: $($_.InstallerSha256)"
             if (-not $_.InstallerSha256 -ieq $hash) {
@@ -114,6 +109,7 @@ jobs:
             }
             $done += $_.InstallerUrl
           }
+          gh pr edit $env:PR --remove-label installer-hash-mismatch # Remove hash-mismatch label if present
         env:
           PR: ${{ github.event.pull_request.html_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
