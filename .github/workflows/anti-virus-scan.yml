@@ -90,7 +90,7 @@ jobs:
             if ($_.InstallerSha256 -ine $hash) {
               Write-Output ' - Adding installer-hash-mismatch label to PR'
               gh pr edit $env:PR --add-label installer-hash-mismatch
-              Write-Error 'InstallerSha256 does not match with actual installer hash'
+              Write-Error 'Actual installer sha-256 hash differs from the InstallerSha256 provided in the manifest.'
               exit 1
             }
             $taskName = "FileScan-$(Get-Random)"
