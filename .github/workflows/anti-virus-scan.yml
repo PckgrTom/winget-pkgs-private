@@ -46,6 +46,11 @@ jobs:
     permissions:
       pull-requests: write
     steps:
+      - if: ${{ contains(github.event.issue.labels.*.name, 'installer-hash-mismatch') }}
+        run: gh pr edit $env:PR --remove-label installer-hash-mismatch
+        env:
+          PR: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
@@ -71,14 +76,28 @@ jobs:
           Write-OutPut 'Scanning ${{ matrix.file }}'
           Remove-MpPreference -ExclusionPath (Get-MpPreference).ExclusionPath
           Write-Output 'Getting installer urls...'
-          $installerUrls = Get-Content '${{ matrix.file }}' | ConvertFrom-Yaml | Select-Object -ExpandProperty Installers | Select-Object -ExpandProperty InstallerUrl -Unique
+          $done = @()
+          $installers = Get-Content '${{ matrix.file }}' | ConvertFrom-Yaml | Select-Object -ExpandProperty Installers
           Write-Output " Found $($installerUrls.Count) installer urls"
           $installerUrls | ForEach-Object {
-            Write-Output " - Scanning $_"
+            if ($done -contains $_.InstallerUrl) {
+              Write-Output " - [Skipping] Already processed $($_.InstallerUrl)"
+              return
+            }
+            Write-Output " - Scanning $($_.InstallerUrl)"
             $tempFile = New-TemporaryFile
-            Invoke-WebRequest -Uri $_ -OutFile $tempFile
+            Invoke-WebRequest -Uri $_.InstallerUrl -OutFile $tempFile
             $fileName = $tempFile.FullName
             Write-Output " - Downloaded to $fileName"
+            $hash = Get-FileHash -Path $fileName -Algorithm SHA256
+            Write-Output " - Detected sha-256 hash: $hash"
+            Write-Output " - Installer hash in manifest: $($_.InstallerSha256)"
+            if (-not $_.InstallerSha256 -ieq $hash) {
+              Write-Output ' - Adding installer-hash-mismatch label to PR'
+              gh pr edit $env:PR --add-label installer-hash-mismatch
+              Write-Error 'InstallerSha256 does not match with actual installer hash'
+              exit 1
+            }
             $taskName = "FileScan-$(Get-Random)"
             schtasks /create /tn $taskName /sc DAILY /st 13:00 /ru SYSTEM /rl HIGHEST /tr "'C:\Program Files\Windows Defender\MpCmdRun.exe' -Scan -ScanType 3 -File $fileName"
             Start-ScheduledTask -TaskName $taskName
@@ -93,7 +112,11 @@ jobs:
             } else {
               Write-Output " - Installer has passed Defender Scan"
             }
+            $done += $_.InstallerUrl
           }
+        env:
+          PR: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run winget install
         run: |
           winget install --manifest '${{ steps.parent-dir.outputs.parent-dir }}' --disable-interactivity --accept-source-agreements --accept-package-agreements
