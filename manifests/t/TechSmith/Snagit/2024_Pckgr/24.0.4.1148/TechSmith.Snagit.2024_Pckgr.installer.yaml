@@ -3,6 +3,7 @@
 
 PackageIdentifier: TechSmith.Snagit.2024_Pckgr
 PackageVersion: 24.0.4.1148
+Scope: machine
 InstallerType: burn
 UpgradeBehavior: install
 Installers:

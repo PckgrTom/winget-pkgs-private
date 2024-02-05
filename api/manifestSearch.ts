@@ -8,6 +8,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
+  if (
+    !req.headers["windows-package-manager"] ||
+    req.headers["windows-package-manager"] !== process.env.AUTH
+  ) {
+    res.status(401).send("Unauthorized");
+    return;
+  }
+
   // Parse the request body as JSON
   const { Query, Inclusions, Filters, MaxiumumResults } = req.body as {
     Query: SearchRequestMatch;

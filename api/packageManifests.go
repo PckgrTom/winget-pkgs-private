@@ -17,6 +17,11 @@ func PackageManifests(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if r.Header.Get("Windows-Package-Manager") != os.Getenv("AUTH") {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
 	pkg_id := r.URL.Query().Get("package_identifier")
 	if pkg_id == "" {
 		w.WriteHeader(http.StatusBadRequest)
