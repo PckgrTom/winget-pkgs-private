@@ -3,6 +3,7 @@
 
 PackageIdentifier: Logitech.LogiTune_Pckgr
 PackageVersion: 3.5.173.0
+Scope: machine
 InstallerType: burn
 Installers:
 - Architecture: x64
