@@ -51,7 +51,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
       - run: Install-Module -Name powershell-yaml -Force -Scope CurrentUser -Repository PSGallery
       - run: Install-Module -Name Microsoft.WinGet.Client -Force -Scope CurrentUser -Repository PSGallery
-      - run: Repair-WinGetPackageManager -Latest -IncludePreRelease -Verbose
+      - run: Repair-WinGetPackageManager -Latest -IncludePreRelease -AllUsers -Verbose
       - run: winget settings --enable LocalManifestFiles
       - name: Get parent directory
         id: parent-dir
