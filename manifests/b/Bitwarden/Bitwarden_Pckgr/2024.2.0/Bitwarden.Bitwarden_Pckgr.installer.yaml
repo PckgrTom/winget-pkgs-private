@@ -1,0 +1,23 @@
+# Created using wingetcreate 1.5.7.0
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.5.0.schema.json
+
+PackageIdentifier: Bitwarden.Bitwarden_Pckgr
+PackageVersion: 2024.2.0
+InstallerType: nullsoft
+InstallerSwitches:
+  Upgrade: --updated
+UpgradeBehavior: install
+Protocols:
+- bitwarden
+Installers:
+- Architecture: x64
+  Scope: user
+  InstallerUrl: https://github.com/bitwarden/clients/releases/download/desktop-v2024.2.0/Bitwarden-Installer-2024.2.0.exe
+  InstallerSha256: 2954CF74CF13FB101C6B7B604CF35F25ECC7B9C55B07AF4867C8DA4D60256D45
+- Architecture: x64
+  Scope: machine
+  InstallerUrl: https://github.com/bitwarden/clients/releases/download/desktop-v2024.2.0/Bitwarden-Installer-2024.2.0.exe
+  InstallerSha256: 2954CF74CF13FB101C6B7B604CF35F25ECC7B9C55B07AF4867C8DA4D60256D45
+  ElevationRequirement: elevatesSelf
+ManifestType: installer
+ManifestVersion: 1.5.0
