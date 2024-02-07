@@ -16,9 +16,139 @@ jobs:
       - uses: actions/checkout@v4
       - run: Install-Module -Name powershell-yaml -Force -Repository PSGallery -Scope CurrentUser
         shell: pwsh
-      - run: .\Tools\build_database.ps1
+      - run: |
+          $ManifestsDir = Join-Path -Path $pwd.Path manifests -Resolve
+          $ToNatural = { [regex]::Replace($_, '\d+', { $args[0].Value.PadLeft(20) }) }
+          $FinalResult = @()
+          function Get-VersionLevelDirs {
+            param (
+                [Parameter(Mandatory = $true)]
+                [string]$Path
+            )
+            $AllDirs = Get-ChildItem -Path $Path -Directory
+            $VersionLevelDirs = @{}
+            # Loop through each directory
+            foreach ($dir in $AllDirs) {
+              # Get all directories (versions) present in the directory
+              $versionDirs = Get-ChildItem $dir.FullName -Directory
+              # If there are subdirectories, call this function recursively
+              if ($versionDirs) {
+                $VersionLevelDirs += Get-VersionLevelDirs -Path $dir.FullName
+              } else {
+                # Add the directory and its versions to the VersionLevelDirs hashtable
+                $package = $dir.Parent.FullName.Remove(0, $ManifestsDir.Length + 3).Split([IO.Path]::DirectorySeparatorChar) -join '.'
+                $version = $dir.FullName
+                if ($VersionLevelDirs.ContainsKey($package)) {
+                  $VersionLevelDirs[$package] += $version
+                } else {
+                  $VersionLevelDirs[$package] = @($version)
+                }
+              }
+            }
+            return $VersionLevelDirs
+          }
+          # Call the function with the initial path, folder which contains manifests
+          $PackagesAndVersions = Get-VersionLevelDirs -Path manifests/
+          # Now get required data from manifests and output to json
+          foreach ($package in $PackagesAndVersions.Keys) {
+            $versions = $PackagesAndVersions[$package]
+            $latestVersion = $versions | Sort-Object $ToNatural | Select-Object -Last 1
+            $latestVersionName = Split-Path -Path $latestVersion -Leaf
+            Write-Host "Latest version of $package is $latestVersionName"
+            $packageVersions = $versions | ForEach-Object { Split-Path -Path $_ -Leaf }
+            if ($packageVersions -is [string]) {
+              $packageVersions = @($packageVersions)
+            }
+            $data = @{ PackageVersion = $packageVersions; LatestVersion = $latestVersionName }
+            $manifestfiles = Get-ChildItem -Path $latestVersion -Filter '*.yaml' -File
+            foreach ($manifestfile in $manifestfiles) {
+              $manifest = Get-Content -Path $manifestfile.FullName -Raw | ConvertFrom-Yaml
+              switch ($manifest.ManifestType) {
+                'installer' {
+                  $data['Commands'] = $manifest.Commands | Select-Object -Unique
+                  $data['PackageFamilyName'] = ($manifest.Installers.PackageFamilyName ?? $manifest.PackageFamilyName) | Select-Object -Unique
+                  $data['ProductCode'] = ($manifest.Installers.ProductCode ?? $manifest.ProductCode) | Select-Object -Unique
+                  if ($data['Commands'] -is [string]) {
+                    $data['Commands'] = @($data['Commands'])
+                  }
+                  if ($data['PackageFamilyName'] -is [string]) {
+                    $data['PackageFamilyName'] = @($data['PackageFamilyName'])
+                  }
+                  if ($data['ProductCode'] -is [string]) {
+                    $data['ProductCode'] = @($data['ProductCode'])
+                  }
+                }
+                'defaultLocale' {
+                  $data['PackageIdentifier'] = $manifest.PackageIdentifier
+                  $data['PackageName'] = $manifest.PackageName
+                  $data['Publisher'] = $manifest.Publisher
+                  $data['Moniker'] = $manifest.Moniker
+                  $data['Tags'] = $manifest.Tags | Select-Object -Unique
+                  if ($data['Tags'] -is [string]) {
+                    $data['Tags'] = @($data['Tags'])
+                  }
+                }
+              }
+            }
+            # add to the final result
+            $FinalResult += $data
+          }
+          $FinalResult | ConvertTo-Json -Depth 10 | Out-File -FilePath data.json -Encoding utf8
         shell: pwsh
-      - run: pip install psycopg2 python-dotenv
-      - run: python Tools/write_database.py
+      - run: pip install psycopg2
+      - run: |
+          python - << EOF
+          import psycopg2
+          import json
+          import os
+
+          print('Loading data.json...')
+          with open('data.json', encoding='utf8') as f:
+              data = json.load(f)
+
+          if not os.getenv('DATABASE_URL'):
+              print('Could not find DATABASE_URL environment variable')
+              exit()
+          else:
+              print('Found DATABASE_URL environment variable')
+              print('Continuing...')
+
+          print('Connecting to database...')
+          conn = psycopg2.connect(os.getenv('DATABASE_URL'))
+          cur = conn.cursor()
+
+          # Drop the table if it already exists
+          cur.execute("""
+              DROP TABLE IF EXISTS packages;
+              CREATE TABLE packages (
+                  "PackageIdentifier" TEXT PRIMARY KEY,
+                  "PackageVersion" TEXT[] NOT NULL,
+                  "LatestVersion" TEXT NOT NULL,
+                  "PackageName" TEXT NOT NULL,
+                  "Publisher" TEXT NOT NULL,
+                  "Moniker" TEXT,
+                  "ProductCode" TEXT[],
+                  "Commands" TEXT[],
+                  "Tags" TEXT[],
+                  "PackageFamilyName" TEXT[]
+              )
+          """)
+
+          # json_populate_recordset function can help to convert json to record set
+          print('Inserting new data...')
+          cur.execute("""
+              INSERT INTO packages
+              SELECT * FROM json_populate_recordset(NULL::packages, %s)
+          """, (json.dumps(data),))
+
+          # Commit the changes
+          print('Committing changes...')
+          conn.commit()
+
+          # Close the cursor and connection
+          cur.close()
+          conn.close()
+          print('Done!')
+          EOF
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
