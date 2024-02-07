@@ -187,7 +187,7 @@ func getVersions(pkg_id string, zipFile *zip.ReadCloser) ([]string, string) {
 			versions = append(versions, strings.TrimSuffix(v, "/"))
 		} else {
 			// length of WINGET_PKGS_REPO + "-" + WINGET_PKGS_BRANCH + "/manifests/" + "m" + "/"
-			pkg_id_proper = strings.ReplaceAll(file.Name[len(WINGET_PKGS_BRANCH)+len(WINGET_PKGS_REPO_NAME)+14:len(file.Name)-len(version)-1], "/", ".")
+			pkg_id_proper = strings.ReplaceAll(file.Name[len(WINGET_PKGS_BRANCH)+len(WINGET_PKGS_REPO_NAME)+14:len(file.Name)-len(v)-1], "/", ".")
 		}
 	}
 	// remove sub-packages
