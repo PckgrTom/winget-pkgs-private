@@ -32,7 +32,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     process.env.DATABASE_URL!
   )![0];
   const db = createKysely<Database>({
-    connectionString: hostHead.includes("-pooler")
+    connectionString: hostHead.endsWith("-pooler")
       ? process.env.DATABASE_URL!
       : process.env.DATABASE_URL!.replace(hostHead, `${hostHead}-pooler`),
   });
