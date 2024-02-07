@@ -18,7 +18,7 @@ jobs:
         shell: pwsh
       - run: .\Tools\build_database.ps1
         shell: pwsh
-      - run: pip install -r Tools/requirements.txt
+      - run: pip install psycopg2 python-dotenv
       - run: python Tools/write_database.py
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
