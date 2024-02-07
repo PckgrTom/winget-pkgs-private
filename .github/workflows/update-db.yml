@@ -16,7 +16,8 @@ jobs:
       - uses: actions/checkout@v4
       - run: Install-Module -Name powershell-yaml -Force -Repository PSGallery -Scope CurrentUser
         shell: pwsh
-      - run: |
+      - name: Get data
+        run: |
           $ManifestsDir = Join-Path -Path $pwd.Path manifests -Resolve
           $ToNatural = { [regex]::Replace($_, '\d+', { $args[0].Value.PadLeft(20) }) }
           $FinalResult = @()
@@ -96,28 +97,24 @@ jobs:
           $FinalResult | ConvertTo-Json -Depth 10 | Out-File -FilePath data.json -Encoding utf8
         shell: pwsh
       - run: pip install psycopg2
-      - run: |
+      - name: Update database
+        run: |
           python - << EOF
           import psycopg2
           import json
           import os
-
           print('Loading data.json...')
           with open('data.json', encoding='utf8') as f:
               data = json.load(f)
-
           if not os.getenv('DATABASE_URL'):
               print('Could not find DATABASE_URL environment variable')
               exit()
           else:
               print('Found DATABASE_URL environment variable')
               print('Continuing...')
-
           print('Connecting to database...')
           conn = psycopg2.connect(os.getenv('DATABASE_URL'))
           cur = conn.cursor()
-
-          # Drop the table if it already exists
           cur.execute("""
               DROP TABLE IF EXISTS packages;
               CREATE TABLE packages (
@@ -133,19 +130,13 @@ jobs:
                   "PackageFamilyName" TEXT[]
               )
           """)
-
-          # json_populate_recordset function can help to convert json to record set
           print('Inserting new data...')
           cur.execute("""
               INSERT INTO packages
               SELECT * FROM json_populate_recordset(NULL::packages, %s)
           """, (json.dumps(data),))
-
-          # Commit the changes
           print('Committing changes...')
           conn.commit()
-
-          # Close the cursor and connection
           cur.close()
           conn.close()
           print('Done!')
