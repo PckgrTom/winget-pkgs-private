@@ -8,7 +8,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  if (req.headers["windows-package-manager"] !== process.env.AUTH) {
+  if (
+    process.env.AUTH &&
+    req.headers["windows-package-manager"] !== process.env.AUTH
+  ) {
     res.status(401).send("Unauthorized");
     return;
   }
@@ -25,12 +28,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   console.log(`Filters: ${JSON.stringify(Filters, null, 0)}`);
   console.log(`MaxiumumResults: ${MaxiumumResults}`);
 
-  let [hostHead] = process.env.PGHOST!.split(".");
+  let hostHead = new RegExp(/(?<=@).*?(?=\.)/g).exec(
+    process.env.DATABASE_URL!
+  )![0];
   const db = createKysely<Database>({
-    connectionString: process.env.DATABASE_URL!.replace(
-      hostHead,
-      `${hostHead}-pooler`
-    ),
+    connectionString: hostHead.includes("pooler")
+      ? process.env.DATABASE_URL!
+      : process.env.DATABASE_URL!.replace(hostHead, `${hostHead}-pooler`),
   });
   let query = db.selectFrom("packages").selectAll();
 
@@ -161,7 +165,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
           PackageVersion: version,
         });
       }
-    };
+    }
     data.push({
       PackageIdentifier: result.PackageIdentifier,
       PackageName: result.PackageName,

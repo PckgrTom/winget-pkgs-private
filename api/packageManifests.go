@@ -26,7 +26,7 @@ func PackageManifests(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if r.Header.Get("Windows-Package-Manager") != os.Getenv("AUTH") {
+	if os.Getenv("AUTH") != "" && r.Header.Get("Windows-Package-Manager") != os.Getenv("AUTH") {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
@@ -56,7 +56,7 @@ func PackageManifests(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	pkg_versions := getVersions(strings.ToLower(pkg_id), repoZip)
+	pkg_versions, pkg_id_proper := getVersions(strings.ToLower(pkg_id), repoZip)
 	if len(pkg_versions) == 0 {
 		w.WriteHeader(http.StatusNoContent)
 		w.Write([]byte(fmt.Sprintf("package %s not found in repo", pkg_id)))
@@ -151,7 +151,7 @@ func PackageManifests(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]map[string]interface{}{
 		"Data": {
-			"PackageIdentifier": pkg_id,
+			"PackageIdentifier": pkg_id_proper,
 			"Versions":          result_data_versions,
 		},
 	})
@@ -174,9 +174,10 @@ type Manifest struct {
 	Content  string
 }
 
-func getVersions(pkg_id string, zipFile *zip.ReadCloser) []string {
+func getVersions(pkg_id string, zipFile *zip.ReadCloser) ([]string, string) {
+	var pkg_id_proper string
+	var versions []string
 	pkg_path := getPackagePath(pkg_id, "")
-	versions := []string{}
 	for _, file := range zipFile.File {
 		file_name_lower := strings.ToLower(file.Name)
 		if !strings.HasPrefix(file_name_lower, pkg_path) || !file.Mode().IsDir() {
@@ -184,6 +185,9 @@ func getVersions(pkg_id string, zipFile *zip.ReadCloser) []string {
 		}
 		if v := file.Name[len(pkg_path)+1:]; v != "" {
 			versions = append(versions, strings.TrimSuffix(v, "/"))
+		} else {
+			// length of WINGET_PKGS_REPO + "-" + WINGET_PKGS_BRANCH + "/manifests/" + "m" + "/"
+			pkg_id_proper = strings.ReplaceAll(file.Name[len(WINGET_PKGS_BRANCH)+len(WINGET_PKGS_REPO_NAME)+14:len(file.Name)-len(version)-1], "/", ".")
 		}
 	}
 	// remove sub-packages
@@ -201,7 +205,7 @@ func getVersions(pkg_id string, zipFile *zip.ReadCloser) []string {
 			i--
 		}
 	}
-	return versions
+	return versions, pkg_id_proper
 }
 
 func getManifests(pkg_id, version string, zipFile *zip.ReadCloser) []Manifest {
