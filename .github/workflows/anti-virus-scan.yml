@@ -50,9 +50,8 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
       - run: Install-Module -Name powershell-yaml -Force -Scope CurrentUser -Repository PSGallery
-      - uses: Cyberboss/install-winget@f2bbd477c74da39732b479bf6c6c855a7f9f011c
-        with:
-          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
+      - run: Install-Module -Name Microsoft.WinGet.Client -Force -Scope CurrentUser -Repository PSGallery
+      - run: Repair-WinGetPackageManager -Latest -IncludePreRelease -Verbose
       - run: winget settings --enable LocalManifestFiles
       - name: Get parent directory
         id: parent-dir
