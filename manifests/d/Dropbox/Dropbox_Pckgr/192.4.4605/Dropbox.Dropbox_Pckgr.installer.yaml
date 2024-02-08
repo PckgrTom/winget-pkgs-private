@@ -1,0 +1,20 @@
+# Created using wingetcreate 1.5.7.0
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.5.0.schema.json
+
+PackageIdentifier: Dropbox.Dropbox_Pckgr
+PackageVersion: 192.4.4605
+InstallerType: nullsoft
+Scope: machine
+InstallModes:
+- interactive
+- silent
+UpgradeBehavior: install
+Installers:
+- Architecture: x86
+  InstallerUrl: https://edge.dropboxstatic.com/dbx-releng/client/Dropbox%20192.4.4605%20Offline%20Installer.x86.exe
+  InstallerSha256: C9F9C3B224AF0C8728CF011BA4092E9BD9EDE87ED288173AC390E44FF7DA9DB0
+- Architecture: x64
+  InstallerUrl: https://edge.dropboxstatic.com/dbx-releng/client/Dropbox%20192.4.4605%20Offline%20Installer.x64.exe
+  InstallerSha256: B985290950EDC11B15A0F2E4A4E0E35C11C42825FC490D6769C575FDB632ED28
+ManifestType: installer
+ManifestVersion: 1.5.0
