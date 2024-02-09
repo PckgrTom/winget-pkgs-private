@@ -15,9 +15,9 @@ InstallerSwitches:
 UpgradeBehavior: install
 Dependencies:
   PackageDependencies:
-  - PackageIdentifier: Microsoft.VCRedist.2015+.x64
-  - PackageIdentifier: Microsoft.VCRedist.2015+.x86
-  - PackageIdentifier: Microsoft.DotNet.Runtime.6
+  - PackageIdentifier: Microsoft.VCRedist.2015+.x64_Pckgr
+  - PackageIdentifier: Microsoft.VCRedist.2015+.x86_Pckgr
+  - PackageIdentifier: Microsoft.DotNet.Runtime.6_Pckgr
 Installers:
 - Architecture: x64
   InstallerUrl: https://download3.vmware.com/software/CART24FQ4_WIN_2309.1/VMware-Horizon-Client-2309.1-8.11.1-22783278.exe
