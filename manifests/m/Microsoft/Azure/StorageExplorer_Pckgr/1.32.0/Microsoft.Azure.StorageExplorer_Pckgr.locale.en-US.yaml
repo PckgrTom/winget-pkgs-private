@@ -1,4 +1,4 @@
-# Created with WinGet Automation using Komac v1.11.0
+# Created using wingetcreate 1.5.7.0
 # yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.5.0.schema.json
 
 PackageIdentifier: Microsoft.Azure.StorageExplorer_Pckgr
@@ -20,13 +20,5 @@ Tags:
 - explorer
 - storage
 - storage-explorer
-ReleaseNotes: |-
-  - Table explorer (saved per table)
-  - Blob explorer (saved across all blob containers)
-  - File explorer (saved across all file shares)
-  - Queue explorer (saved across all queues)
-  - Windows/Linux: Alt+Enter
-  - macOS: Command+I
-ReleaseNotesUrl: https://github.com/microsoft/AzureStorageExplorer/releases/tag/v1.32.0
 ManifestType: defaultLocale
 ManifestVersion: 1.5.0
