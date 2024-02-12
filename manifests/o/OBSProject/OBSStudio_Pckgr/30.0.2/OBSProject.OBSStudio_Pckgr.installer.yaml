@@ -16,7 +16,7 @@ ExpectedReturnCodes:
 UpgradeBehavior: install
 Dependencies:
   PackageDependencies:
-  - PackageIdentifier: Microsoft.VCRedist.2015+.x64
+  - PackageIdentifier: Microsoft.VCRedist.2015+.x64_Pckgr
 Installers:
 - Architecture: x64
   InstallerUrl: https://github.com/obsproject/obs-studio/releases/download/30.0.2/OBS-Studio-30.0.2-Full-Installer-x64.exe
