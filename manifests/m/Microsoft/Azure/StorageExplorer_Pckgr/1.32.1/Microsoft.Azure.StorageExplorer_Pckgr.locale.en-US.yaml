@@ -1,0 +1,24 @@
+# Created using wingetcreate 1.5.7.0
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.defaultLocale.1.5.0.schema.json
+
+PackageIdentifier: Microsoft.Azure.StorageExplorer_Pckgr
+PackageVersion: 1.32.1
+PackageLocale: en-US
+Publisher: Microsoft Corporation
+PublisherUrl: https://opensource.microsoft.com
+PublisherSupportUrl: https://github.com/microsoft/AzureStorageExplorer/issues
+Author: Microsoft
+PackageName: Microsoft Azure Storage Explorer
+PackageUrl: https://azure.microsoft.com/en-us/features/storage-explorer
+License: Microsoft
+LicenseUrl: https://www.microsoft.com/en-us/legal/intellectualproperty/copyright/default.aspx
+ShortDescription: Free tool to easily manage your Azure cloud storage resources anywhere, from Windows, macOS, or Linux.
+Moniker: storageexplorer
+Tags:
+- azure
+- azure-storage-explorer
+- explorer
+- storage
+- storage-explorer
+ManifestType: defaultLocale
+ManifestVersion: 1.5.0
