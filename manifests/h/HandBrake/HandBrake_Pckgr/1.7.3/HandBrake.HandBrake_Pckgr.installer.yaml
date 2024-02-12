@@ -12,7 +12,7 @@ InstallModes:
 UpgradeBehavior: install
 Dependencies:
   PackageDependencies:
-  - PackageIdentifier: Microsoft.DotNet.DesktopRuntime.6
+  - PackageIdentifier: Microsoft.DotNet.DesktopRuntime.6_Pckgr
 ProductCode: HandBrake
 Installers:
 - Architecture: x64
