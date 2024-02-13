@@ -11,16 +11,13 @@ jobs:
         working-directory: automation
     steps:
     - uses: actions/checkout@v4
-    - name: Install winget, wingetcreate and update settings
-      shell: pwsh
-      run: |
-        Install-Module -Name Microsoft.WinGet.Client -Force -Scope CurrentUser -Repository PSGallery
-        Repair-WinGetPackageManager -Latest -AllUsers -Verbose
-        winget settings --enable LocalManifestFiles
-        winget --info
-        winget install wingetcreate --disable-interactivity --accept-source-agreements --accept-package-agreements
-        wingetcreate info
-        Copy-Item -Path wingetcreate_settings.json -Destination $env:LOCALAPPDATA\Packages\Microsoft.WindowsPackageManagerManifestCreator_8wekyb3d8bbwe\LocalState\settings.json -Force
+    - run: Install-Module -Name Microsoft.WinGet.Client -Force -Scope CurrentUser -Repository PSGallery
+    - run: Repair-WinGetPackageManager -Latest -AllUsers -Verbose
+    - run: winget settings --enable LocalManifestFiles
+    - run: winget --info
+    - run: winget install wingetcreate --disable-interactivity --accept-source-agreements --accept-package-agreements
+    - run: wingetcreate info
+    - run: Copy-Item -Path wingetcreate_settings.json -Destination $env:LOCALAPPDATA\Packages\Microsoft.WindowsPackageManagerManifestCreator_8wekyb3d8bbwe\LocalState\settings.json -Force
     - uses: actions/setup-python@v5
       with:
         python-version: '3.x'
