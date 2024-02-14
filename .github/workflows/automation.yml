@@ -26,6 +26,7 @@ jobs:
       - run: gh repo sync PckgrTom/$env:REPO --source PckgrBot/$env:REPO -b master --force
         env:
           REPO: winget-pkgs-private
+          GH_TOKEN: ${{ secrets.WC_TOKEN }}
       - run: python main.py
         env:
           GITHUB_TOKEN: ${{ secrets.WC_TOKEN }}
