@@ -115,7 +115,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Run winget install
         run: |
-          winget install --manifest '${{ steps.parent-dir.outputs.parent-dir }}' --disable-interactivity --accept-source-agreements --accept-package-agreements
+          winget install --manifest '${{ steps.parent-dir.outputs.parent-dir }}' --silent --disable-interactivity --accept-source-agreements --accept-package-agreements
           If ($LASTEXITCODE -ne 0) {
             Write-Error 'Install failed for ${{ steps.parent-dir.outputs.parent-dir }}'
             exit 1
