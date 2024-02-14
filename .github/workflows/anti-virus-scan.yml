@@ -73,7 +73,7 @@ jobs:
           Write-Output 'Getting installer urls...'
           $done = @()
           $installers = Get-Content '${{ matrix.file }}' | ConvertFrom-Yaml | Select-Object -ExpandProperty Installers
-          Write-Output " Found $($installers.Count) installer urls"
+          Write-Output "Found $($installers.Count) installer urls"
           $installers | ForEach-Object {
             if ($done -contains $_.InstallerUrl) {
               Write-Output " - [Skipping] Already processed $($_.InstallerUrl)"
@@ -93,7 +93,7 @@ jobs:
               Write-Error 'Actual installer sha-256 hash differs from the InstallerSha256 provided in the manifest.'
               exit 1
             }
-            $taskName = "FileScan-$(Get-Random)"
+            $taskName = "FileScan-$($tempFile.BaseName)"
             schtasks /create /tn $taskName /sc DAILY /st 13:00 /ru SYSTEM /rl HIGHEST /tr "'C:\Program Files\Windows Defender\MpCmdRun.exe' -Scan -ScanType 3 -File $fileName"
             Start-ScheduledTask -TaskName $taskName
             while ((Get-ScheduledTask -TaskName $taskName).State -ne 'Ready') {
