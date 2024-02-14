@@ -1,1 +1,11 @@
-{"Kitware.CMake_Pckgr": ["v3.29.0-rc1"], "dnGrep.dnGrep_Pckgr": ["v4.1.27.0"]}
+{
+  "Kitware.CMake_Pckgr": [
+    "v3.29.0-rc1"
+  ],
+  "Nextcloud.NextcloudDesktop_Pckgr": [
+    "v3.12.0"
+  ],
+  "dnGrep.dnGrep_Pckgr": [
+    "v4.1.27.0"
+  ]
+}
