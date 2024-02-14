@@ -10,27 +10,30 @@ jobs:
         shell: pwsh
         working-directory: automation
     steps:
-    - uses: actions/checkout@v4
-    - run: Install-Module -Name Microsoft.WinGet.Client -Force -Scope CurrentUser -Repository PSGallery
-    - run: Repair-WinGetPackageManager -Latest -AllUsers -Verbose
-    - run: winget settings --enable LocalManifestFiles
-    - run: winget --info
-    - run: winget install wingetcreate --disable-interactivity --accept-source-agreements --accept-package-agreements
-    - run: wingetcreate info
-    - run: Copy-Item -Path wingetcreate_settings.json -Destination $env:LOCALAPPDATA\Packages\Microsoft.WindowsPackageManagerManifestCreator_8wekyb3d8bbwe\LocalState\settings.json -Force
-    - uses: actions/setup-python@v5
-      with:
-        python-version: '3.x'
-        check-latest: true
-    - run: python -m pip install -r requirements.txt
-    - run: python main.py
-      env:
-        GITHUB_TOKEN: ${{ secrets.WC_TOKEN }}
-    - name: Update list.json
-      if: always()
-      run: |
-        git config --global user.name github-actions[bot]
-        git config --global user.email 41898282+github-actions[bot]@users.noreply.github.com
-        git add list.json
-        git commit -m 'Automation: Update list.json'
-        git push
+      - uses: actions/checkout@v4
+      - run: Install-Module -Name Microsoft.WinGet.Client -Force -Scope CurrentUser -Repository PSGallery
+      - run: Repair-WinGetPackageManager -Latest -AllUsers -Verbose
+      - run: winget settings --enable LocalManifestFiles
+      - run: winget --info
+      - run: winget install wingetcreate --disable-interactivity --accept-source-agreements --accept-package-agreements
+      - run: wingetcreate info
+      - run: Copy-Item -Path wingetcreate_settings.json -Destination $env:LOCALAPPDATA\Packages\Microsoft.WindowsPackageManagerManifestCreator_8wekyb3d8bbwe\LocalState\settings.json -Force
+      - uses: actions/setup-python@v5
+        with:
+          python-version: 3.x
+          check-latest: true
+      - run: python -m pip install -r requirements.txt
+      - run: gh repo sync PckgrTom/$env:REPO --source PckgrBot/$env:SOURCE -b master --force
+        env:
+          REPO: winget-pkgs-private
+      - run: python main.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.WC_TOKEN }}
+      - name: Update list.json
+        if: always()
+        run: |
+          git config --global user.name github-actions[bot]
+          git config --global user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add list.json
+          git commit -m 'Automation: Update list.json'
+          git push
