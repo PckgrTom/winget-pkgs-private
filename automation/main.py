@@ -65,7 +65,7 @@ def do_list(id: str, version: str, mode: str) -> bool | None:
             if version not in JSON[id]:
                 JSON[id].append(version)
             with open(path, "w+", encoding="utf-8") as w:
-                w.write(json.dumps(JSON))
+                w.write(json.dumps(JSON, indent=2, sort_keys=True))
         elif mode == "verify":
             if version in JSON[id]:
                 return True
