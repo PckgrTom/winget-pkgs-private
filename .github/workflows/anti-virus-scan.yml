@@ -35,7 +35,7 @@ jobs:
           fi
   scan:
     name: Scan
-    runs-on: self-hosted
+    runs-on: windows-latest
     needs: changed-files
     strategy:
       matrix:
@@ -61,6 +61,11 @@ jobs:
           "parent-dir=$parentDir" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
       - name: Run winget validate
         run: |
+          Write-Host @'
+          --> Disabling safety warning when running installer
+          '@
+          New-Item -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Associations' | Out-Null
+          New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Associations' -Name 'ModRiskFileTypes' -Type 'String' -Value '.bat;.exe;.reg;.vbs;.chm;.msi;.js;.cmd' | Out-Null
           winget validate --manifest '${{ steps.parent-dir.outputs.parent-dir }}'
           If ($LASTEXITCODE -ne 0) {
             Write-Error 'Validation failed for ${{ steps.parent-dir.outputs.parent-dir }}'
