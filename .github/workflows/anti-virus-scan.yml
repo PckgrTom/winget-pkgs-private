@@ -142,4 +142,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Remove Winget Application
         run: |
-          winget uninstall --manifest '${{ steps.parent-dir.outputs.parent-dir }}' --disable-interactivity --accept-source-agreements --accept-package-agreements
+          winget uninstall --manifest '${{ steps.parent-dir.outputs.parent-dir }}' --disable-interactivity
