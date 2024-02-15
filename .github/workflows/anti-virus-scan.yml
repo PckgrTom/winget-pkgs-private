@@ -69,7 +69,7 @@ jobs:
       - name: Windows Defender Scan
         run: |
           Write-OutPut 'Scanning ${{ matrix.file }}'
-          Remove-MpPreference -ExclusionPath (Get-MpPreference).ExclusionPath
+          #Remove-MpPreference -ExclusionPath (Get-MpPreference).ExclusionPath
           Write-Output 'Getting installer urls...'
           $done = @()
           $installers = Get-Content '${{ matrix.file }}' | ConvertFrom-Yaml | Select-Object -ExpandProperty Installers
