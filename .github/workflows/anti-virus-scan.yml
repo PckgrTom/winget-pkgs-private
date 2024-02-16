@@ -116,7 +116,7 @@ jobs:
       - name: Disabling safety warning when running installer
         run: |
           New-Item -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Associations'
-          New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Associations' -Name 'LowRiskFileTypes' -Type 'String' -Value '.bat;.exe;.reg;.vbs;.chm;.msi;.js;.cmd'
+          New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Associations' -Name 'ModRiskFileTypes' -Type 'String' -Value '.bat;.exe;.reg;.vbs;.chm;.msi;.js;.cmd'
       - name: Run winget install
         run: |
           winget install --manifest '${{ steps.parent-dir.outputs.parent-dir }}' --disable-interactivity --accept-source-agreements --accept-package-agreements
@@ -124,6 +124,8 @@ jobs:
             Write-Error 'Install failed for ${{ steps.parent-dir.outputs.parent-dir }}'
             exit 1
           }
+      - if: ${{ always() }}
+        uses: vedantmgoyal2009/desktop-screenshot-action@master
       - name: Windows Defender Quick Scan
         run: |
           "C:\Program Files\Windows Defender\MpCmdRun.exe" -SignatureUpdate -MMPC
