@@ -53,7 +53,7 @@ jobs:
       - run: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
       - run: Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "P@ssw0rd!" -Force)
       - run: .\ngrok\ngrok config add-authtoken 2cSSt6CFCDG91tnJyDDnQDE8Gay_51qEoxNPFVPTDn5Kf28wb
-      - run: Start-Job -ScriptBlock { .\ngrok\ngrok.exe tcp 3389 }
+      - run: .\ngrok\ngrok.exe tcp 3389
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
