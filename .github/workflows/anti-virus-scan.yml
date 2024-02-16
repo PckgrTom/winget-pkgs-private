@@ -47,8 +47,8 @@ jobs:
       pull-requests: write
     steps:
       - run: |
-          Invoke-WebRequest -Uri https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.msi -OutFile c.msi
-          msiexec /i .\c.msi /quiet
+          Invoke-WebRequest -Uri https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.msi -OutFile .\c.msi
+          msiexec /i "$((get-item .\c.msi).FullName)" /quiet
           Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
           Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
           Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "rsQ4R>$6f0S£H" -Force)
