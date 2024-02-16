@@ -46,13 +46,14 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - run: iwr https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.msi -OutFile c.msi
-      - run: msiexec /i "$((get-item .\c.msi).FullName)"
+      - run: iwr https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip -OutFile ngrok.zip
+      - run: Expand-Archive .\ngrok.zip
       - run: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
       - run: Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
       - run: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
       - run: Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "P@ssw0rd!" -Force)
-      - run: '& "C:\Program Files (x86)\cloudflared\cloudflared.exe" service install eyJhIjoiZmFhNzRmNTIxYTA0YzZlM2ZhNTk1NjBmYWJmMGM1ZTMiLCJ0IjoiZDU5ZjU4NWEtNjgxZS00YTQ5LWEzZmUtMTQ2NzMxODU4MjRmIiwicyI6IlkyWTFaV0ptTWpVdE1UQXpNeTAwT0RJMUxXRTFZamN0TW1aak16QmhaV1ZpTXpGaSJ9'
+      - run: .\ngrok\ngrok config add-authtoken 2cSSt6CFCDG91tnJyDDnQDE8Gay_51qEoxNPFVPTDn5Kf28wb
+      - run: Start-Job -ScriptBlock { .\ngrok\ngrok.exe tcp 3389 }
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
