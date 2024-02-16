@@ -42,7 +42,7 @@ jobs:
         file: ${{ fromJSON(needs.changed-files.outputs.all_changed_files) }}
     defaults:
       run:
-        shell: pwsh
+        shell: pwsh -MTA
     permissions:
       pull-requests: write
     steps:
