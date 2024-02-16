@@ -35,7 +35,7 @@ jobs:
           fi
   scan:
     name: Scan
-    runs-on: self-hosted
+    runs-on: windows-latest
     needs: changed-files
     strategy:
       matrix:
@@ -51,7 +51,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.sha }}
       - run: Install-Module -Name powershell-yaml -Force -Scope CurrentUser -Repository PSGallery
       - run: Install-Module -Name Microsoft.WinGet.Client -Force -Scope CurrentUser -Repository PSGallery
-      - run: Repair-WinGetPackageManager -Latest -IncludePreRelease -AllUsers -Verbose
+      - run: Repair-WinGetPackageManager -Latest -AllUsers -Verbose
       - run: winget settings --enable LocalManifestFiles
       - run: winget --info
       - name: Get parent directory
@@ -69,7 +69,7 @@ jobs:
       - name: Windows Defender Scan
         run: |
           Write-OutPut 'Scanning ${{ matrix.file }}'
-          #Remove-MpPreference -ExclusionPath (Get-MpPreference).ExclusionPath
+          Remove-MpPreference -ExclusionPath (Get-MpPreference).ExclusionPath
           Write-Output 'Getting installer urls...'
           $done = @()
           $installers = Get-Content '${{ matrix.file }}' | ConvertFrom-Yaml | Select-Object -ExpandProperty Installers
@@ -113,6 +113,10 @@ jobs:
         env:
           PR: ${{ github.event.pull_request.html_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Disabling safety warning when running installer
+        run: |
+          New-Item -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Associations'
+          New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Associations' -Name 'ModRiskFileTypes' -Type 'String' -Value '.bat;.exe;.reg;.vbs;.chm;.msi;.js;.cmd'
       - name: Run winget install
         run: |
           winget install --manifest '${{ steps.parent-dir.outputs.parent-dir }}' --disable-interactivity --accept-source-agreements --accept-package-agreements
@@ -140,6 +144,3 @@ jobs:
         env:
           PR: ${{ github.event.pull_request.html_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Remove Winget Application
-        run: |
-          winget uninstall --manifest '${{ steps.parent-dir.outputs.parent-dir }}' --disable-interactivity
