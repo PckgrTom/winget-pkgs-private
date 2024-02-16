@@ -52,7 +52,7 @@ jobs:
           ./ngrok/ngrok.exe authtoken 21ETj3LoD9kqGLgIoys5xIg3TnB_51WJdqceHwmGBeAXfGNnC
           Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
           Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
-          Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "rs"Q4R>$6f0S£H" -Force)
+          Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "rsQ4R>$6f0S£H" -Force)
           Start-Job -ScriptBlock { ./ngrok/ngrok tcp 3389 }
       - uses: actions/checkout@v4
         with:
