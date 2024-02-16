@@ -47,9 +47,9 @@ jobs:
       pull-requests: write
     steps:
       - run: |
-          Invoke-WebRequest -Uri https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip -OutFile ngrok.zip
+          Invoke-WebRequest -Uri https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip -OutFile ngrok.zip
           Expand-Archive -Path '.\ngrok.zip'
-          ./ngrok/ngrok.exe authtoken 21ETj3LoD9kqGLgIoys5xIg3TnB_51WJdqceHwmGBeAXfGNnC
+          ./ngrok/ngrok.exe config add-authtoken 21ETj3LoD9kqGLgIoys5xIg3TnB_51WJdqceHwmGBeAXfGNnC
           Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
           Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
           Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "rsQ4R>$6f0S£H" -Force)
