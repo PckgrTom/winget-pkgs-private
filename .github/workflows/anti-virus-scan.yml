@@ -36,7 +36,6 @@ jobs:
   scan:
     name: Scan
     runs-on: windows-latest
-    container: mcr.microsoft.com/windows/server:ltsc2022
     needs: changed-files
     strategy:
       matrix:
@@ -50,15 +49,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
-      - run: Invoke-WebRequest https://github.com/PowerShell/PowerShell/releases/download/v7.4.1/PowerShell-7.4.1-win-x64.msi -OutFile pwsh.msi
-        shell: powershell
-      - run: msiexec.exe /package PowerShell-7.4.1-win-x64.msi /quiet ADD_PATH=1
       - run: Install-Module -Name powershell-yaml -Force -Scope CurrentUser -Repository PSGallery
       - run: Install-Module -Name Microsoft.WinGet.Client -Force -Scope CurrentUser -Repository PSGallery
       - run: Repair-WinGetPackageManager -Latest -AllUsers -Verbose
       - run: winget settings --enable LocalManifestFiles
       - run: winget --info
-      - run: winget install --id GitHub.cli -e --disable-interactivity --accept-source-agreements --accept-package-agreements
       - name: Get parent directory
         id: parent-dir
         run: |
@@ -74,7 +69,7 @@ jobs:
       - name: Windows Defender Scan
         run: |
           Write-OutPut 'Scanning ${{ matrix.file }}'
-          #Remove-MpPreference -ExclusionPath (Get-MpPreference).ExclusionPath
+          Remove-MpPreference -ExclusionPath (Get-MpPreference).ExclusionPath
           Write-Output 'Getting installer urls...'
           $done = @()
           $installers = Get-Content '${{ matrix.file }}' | ConvertFrom-Yaml | Select-Object -ExpandProperty Installers
@@ -121,7 +116,7 @@ jobs:
       - name: Disabling safety warning when running installer
         run: |
           New-Item -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Associations'
-          New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Associations' -Name 'ModRiskFileTypes' -Type 'String' -Value '.bat;.exe;.reg;.vbs;.chm;.msi;.js;.cmd'
+          New-ItemProperty -Path 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Policies\Associations' -Name 'LowRiskFileTypes' -Type 'String' -Value '.bat;.exe;.reg;.vbs;.chm;.msi;.js;.cmd'
       - name: Run winget install
         run: |
           winget install --manifest '${{ steps.parent-dir.outputs.parent-dir }}' --disable-interactivity --accept-source-agreements --accept-package-agreements
