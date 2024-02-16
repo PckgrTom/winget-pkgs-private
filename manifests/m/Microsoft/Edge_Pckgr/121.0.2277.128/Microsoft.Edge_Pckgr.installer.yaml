@@ -28,16 +28,16 @@ AppsAndFeaturesEntries:
 - UpgradeCode: '{883C2625-37F7-357F-A0F4-DFAF391B2B9C}'
 Installers:
 - Architecture: x86
-  InstallerUrl: https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/537ff52d-1ef4-4761-8f16-9f3bb902f90f/MicrosoftEdgeEnterpriseX86.msi
-  InstallerSha256: 661D2F6B028CF3FDB9149EE2F2CDC5E29EC24668F63735FF90C7B93B28CFB762
-  ProductCode: '{0A30D575-F57A-3815-997C-C9906523C0FC}'
+  InstallerUrl: https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/d251dfec-1606-4bea-b6c3-a6204d2ebf3b/MicrosoftEdgeEnterpriseX86.msi
+  InstallerSha256: E3F3C3A9668FF7754DE4FC29358462584C51499BDD588597741143D7C17E5141
+  ProductCode: '{B36F00D3-3EAF-37C6-9613-CE2C81A67D58}'
 - Architecture: x64
-  InstallerUrl: https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/b5176aa0-0e05-4055-97bd-018350686657/MicrosoftEdgeEnterpriseX64.msi
-  InstallerSha256: 68F2A1B93B368A5CDAF5687094DD605DD33DE01B93B0A00B6A7FE259149D0951
-  ProductCode: '{64B40021-9C56-3120-9F6F-2DC16BB2BB1A}'
+  InstallerUrl: https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/3a274bcd-d249-4afb-9c76-b19dc2016be2/MicrosoftEdgeEnterpriseX64.msi
+  InstallerSha256: 326E4025DAE2A838051C88C0E90B9A99791DDEF634D54B0AE524AD4800F85852
+  ProductCode: '{638951E9-549C-3F8A-B8E7-084A631815A6}'
 - Architecture: arm64
-  InstallerUrl: https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/45bf8769-2be0-4a29-9fd0-02bc9261f0f8/MicrosoftEdgeEnterpriseARM64.msi
-  InstallerSha256: EFDAD8A90920F488AD576C7C8D28E0B1B204D12B6F299A49D3496A970E0F91BA
-  ProductCode: '{30FF6210-3B04-33F8-9F23-11DCE29B112E}'
+  InstallerUrl: https://msedge.sf.dl.delivery.mp.microsoft.com/filestreamingservice/files/87f67c61-43db-46c5-a858-9824e0efb745/MicrosoftEdgeEnterpriseARM64.msi
+  InstallerSha256: 8D383C1753BCC0F8A17037823DEF815AB4927FD9F73924A3DA41EEB510D2C1D5
+  ProductCode: '{28665FB6-3C28-3B97-8150-D11CE424BBB0}'
 ManifestType: installer
 ManifestVersion: 1.6.0
