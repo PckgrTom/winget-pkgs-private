@@ -36,6 +36,7 @@ jobs:
   scan:
     name: Scan
     runs-on: windows-latest
+    container: mcr.microsoft.com/windows/server:ltsc2022
     needs: changed-files
     strategy:
       matrix:
@@ -49,11 +50,15 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
+      - run: Invoke-WebRequest https://github.com/PowerShell/PowerShell/releases/download/v7.4.1/PowerShell-7.4.1-win-x64.msi -OutFile pwsh.msi
+        shell: powershell
+      - run: msiexec.exe /package PowerShell-7.4.1-win-x64.msi /quiet ADD_PATH=1
       - run: Install-Module -Name powershell-yaml -Force -Scope CurrentUser -Repository PSGallery
       - run: Install-Module -Name Microsoft.WinGet.Client -Force -Scope CurrentUser -Repository PSGallery
       - run: Repair-WinGetPackageManager -Latest -AllUsers -Verbose
       - run: winget settings --enable LocalManifestFiles
       - run: winget --info
+      - run: winget install --id GitHub.cli -e --disable-interactivity --accept-source-agreements --accept-package-agreements
       - name: Get parent directory
         id: parent-dir
         run: |
@@ -69,7 +74,7 @@ jobs:
       - name: Windows Defender Scan
         run: |
           Write-OutPut 'Scanning ${{ matrix.file }}'
-          Remove-MpPreference -ExclusionPath (Get-MpPreference).ExclusionPath
+          #Remove-MpPreference -ExclusionPath (Get-MpPreference).ExclusionPath
           Write-Output 'Getting installer urls...'
           $done = @()
           $installers = Get-Content '${{ matrix.file }}' | ConvertFrom-Yaml | Select-Object -ExpandProperty Installers
