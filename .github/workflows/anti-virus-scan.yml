@@ -52,10 +52,17 @@ jobs:
       - run: Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
       - run: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
       - run: Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "P@ssw0rd!" -Force)
-      - run: .\ngrok\ngrok config add-authtoken 2cSSt6CFCDG91tnJyDDnQDE8Gay_51qEoxNPFVPTDn5Kf28wb
-      - run: start /b ngrok.exe tcp 3389
-        shell: cmd
-        working-directory: ngrok
+      - run: |
+          @'
+          version: 2
+          authtoken: 2cSSt6CFCDG91tnJyDDnQDE8Gay_51qEoxNPFVPTDn5Kf28wb
+          tunnels:
+           my_tunnel_name:
+            addr: 3389
+            proto: tcp
+          '@ | Out-File .\ngrok\ngconfig.yml
+      - run: .\ngrok\ngrok.exe service install --config="$((get-item .\ngrok\ngconfig.yml).fullname)"
+      - run: .\ngrok\ngrok.exe service start
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
