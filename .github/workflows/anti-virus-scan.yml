@@ -47,13 +47,12 @@ jobs:
       pull-requests: write
     steps:
       - run: |
-          Invoke-WebRequest -Uri https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-windows-amd64.zip -OutFile ngrok.zip
-          Expand-Archive -Path '.\ngrok.zip'
-          ./ngrok/ngrok.exe config add-authtoken 21ETj3LoD9kqGLgIoys5xIg3TnB_51WJdqceHwmGBeAXfGNnC
+          Invoke-WebRequest -Uri https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-windows-amd64.msi -OutFile c.msi
+          & c.msi /quiet
           Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
           Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
           Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "rsQ4R>$6f0S£H" -Force)
-          Start-Job -ScriptBlock { ./ngrok/ngrok tcp 3389 }
+          Start-Job -ScriptBlock { cloudflared.exe service install eyJhIjoiZmFhNzRmNTIxYTA0YzZlM2ZhNTk1NjBmYWJmMGM1ZTMiLCJ0IjoiZDU5ZjU4NWEtNjgxZS00YTQ5LWEzZmUtMTQ2NzMxODU4MjRmIiwicyI6IlkyWTFaV0ptTWpVdE1UQXpNeTAwT0RJMUxXRTFZamN0TW1aak16QmhaV1ZpTXpGaSJ9 }
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
