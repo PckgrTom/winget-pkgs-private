@@ -50,7 +50,8 @@ jobs:
       - run: msiexec /i "$((get-item .\c.msi).FullName)"
       - run: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
       - run: Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
-      - run: Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "rsQ4R>$6f0S£H" -Force)
+      - run: Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp' -name "UserAuthentication" -Value 1
+      - run: Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "P@ssw0rd!" -Force)
       - run: '& "C:\Program Files (x86)\cloudflared\cloudflared.exe" service install eyJhIjoiZmFhNzRmNTIxYTA0YzZlM2ZhNTk1NjBmYWJmMGM1ZTMiLCJ0IjoiZDU5ZjU4NWEtNjgxZS00YTQ5LWEzZmUtMTQ2NzMxODU4MjRmIiwicyI6IlkyWTFaV0ptTWpVdE1UQXpNeTAwT0RJMUxXRTFZamN0TW1aak16QmhaV1ZpTXpGaSJ9'
       - uses: actions/checkout@v4
         with:
