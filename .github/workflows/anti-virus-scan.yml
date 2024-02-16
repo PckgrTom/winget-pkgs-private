@@ -46,11 +46,14 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - uses: vedantmgoyal2009/NyaMisty_reverse-rdp-windows-github-actions-ng@master
-        with:
-          ngrok-token: '21ETj3LoD9kqGLgIoys5xIg3TnB_51WJdqceHwmGBeAXfGNnC'
-          password: "Aa123456" # You can also put the password in secrets as you wish.
-          foreground: false
+      - run: |
+          Invoke-WebRequest -Uri https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-windows-amd64.zip -OutFile ngrok.zip
+          Expand-Archive -Path '.\ngrok.zip'
+          ./ngrok/ngrok.exe authtoken 21ETj3LoD9kqGLgIoys5xIg3TnB_51WJdqceHwmGBeAXfGNnC
+          Set-ItemProperty -Path 'HKLM:\System\CurrentControlSet\Control\Terminal Server'-name "fDenyTSConnections" -Value 0
+          Enable-NetFirewallRule -DisplayGroup "Remote Desktop"
+          Set-LocalUser -Name "runneradmin" -Password (ConvertTo-SecureString -AsPlainText "hello" -Force)
+          Start-Job -ScriptBlock { ./ngrok/ngrok tcp 3389 }
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
