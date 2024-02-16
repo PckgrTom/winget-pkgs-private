@@ -46,6 +46,11 @@ jobs:
     permissions:
       pull-requests: write
     steps:
+      - uses: vedantmgoyal2009/NyaMisty_reverse-rdp-windows-github-actions-ng@master
+        with:
+          ngrok-token: '21ETj3LoD9kqGLgIoys5xIg3TnB_51WJdqceHwmGBeAXfGNnC'
+          password: "Aa123456" # You can also put the password in secrets as you wish.
+          foreground: false
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
@@ -124,8 +129,6 @@ jobs:
             Write-Error 'Install failed for ${{ steps.parent-dir.outputs.parent-dir }}'
             exit 1
           }
-      - if: ${{ always() }}
-        uses: vedantmgoyal2009/desktop-screenshot-action@master
       - name: Windows Defender Quick Scan
         run: |
           "C:\Program Files\Windows Defender\MpCmdRun.exe" -SignatureUpdate -MMPC
