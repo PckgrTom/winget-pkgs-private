@@ -1,0 +1,19 @@
+# Created using wingetcreate 1.6.1.0
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.6.0.schema.json
+
+PackageIdentifier: Anydo.Anydo_Pckgr
+PackageVersion: 5.0.59.2
+Platform:
+- Windows.Desktop
+MinimumOSVersion: 10.0.0.0
+InstallerType: nullsoft
+Scope: user
+InstallModes:
+- silent
+UpgradeBehavior: install
+Installers:
+- Architecture: x64
+  InstallerUrl: https://electron-app.any.do/_windows/Any.do.exe
+  InstallerSha256: 8484FF4B233741A389DE023D69288AE5EA02E6AD3FD6AC7FBC55F7F102BBE9A0
+ManifestType: installer
+ManifestVersion: 1.6.0
