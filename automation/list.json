@@ -2,6 +2,15 @@
   "Kitware.CMake_Pckgr": [
     "v3.29.0-rc1"
   ],
+  "Microsoft.AzureCLI_Pckgr": [
+    "2.57.0"
+  ],
+  "Microsoft.Bicep_Pckgr": [
+    "v0.25.53"
+  ],
+  "Microsoft.WindowsTerminal": [
+    "v1.19.10302.0"
+  ],
   "Nextcloud.NextcloudDesktop_Pckgr": [
     "v3.12.0"
   ],
