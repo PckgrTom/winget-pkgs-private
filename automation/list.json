@@ -1,6 +1,7 @@
 {
   "Kitware.CMake_Pckgr": [
-    "v3.29.0-rc1"
+    "v3.29.0-rc1",
+    "v3.29.0-rc2"
   ],
   "Microsoft.AzureCLI_Pckgr": [
     "2.57.0"
