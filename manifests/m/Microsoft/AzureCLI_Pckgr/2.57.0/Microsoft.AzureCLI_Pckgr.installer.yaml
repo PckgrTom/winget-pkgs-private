@@ -1,0 +1,17 @@
+# Created using wingetcreate 1.6.1.0
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.6.0.schema.json
+
+PackageIdentifier: Microsoft.AzureCLI_Pckgr
+PackageVersion: 2.57.0
+InstallerType: msi
+Installers:
+- Architecture: x86
+  InstallerUrl: https://azcliprod.azureedge.net/msi/azure-cli-2.57.0.msi
+  InstallerSha256: 5E9D7B5EBD3023728D38930C0B827E28AFF6D0C2387FE96064EA0AF5417F624F
+  ProductCode: '{95A29CF7-6989-4EC2-866E-43618B144CAF}'
+- Architecture: x64
+  InstallerUrl: https://azcliprod.azureedge.net/msi/azure-cli-2.57.0-x64.msi
+  InstallerSha256: 1371945E4103B7635C86BDB18FC7BCC617E4C01D0AC0645029A15926041326A3
+  ProductCode: '{AA38D42B-CDE7-4437-B254-54172B53938F}'
+ManifestType: installer
+ManifestVersion: 1.6.0
