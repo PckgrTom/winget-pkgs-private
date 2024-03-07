@@ -360,92 +360,74 @@ def main() -> list[tuple[str, tuple[str, str, str]]]:
         Commands.append((command(Wingetcreate, list_to_str(Urls), Version, id, GH_TOKEN), (id, Version, "write")))
     del Urls, Version, id
 
-    # Add Zoom.Zoom to Update List
-    id = "Zoom.Zoom"
-    
-    release_notes_url = "https://zoom.us/releasenotes"
-    release_notes_page = requests.post(release_notes_url, data={
+# Add Zoom.Zoom_Pckgr to Update List
+    id = "Zoom.Zoom_Pckgr"
+    Zoom = {
+        "User-Agent": "Mozilla/5.0 (ZOOM.Win 10.0 x64)"
+    }
+    data = {
         "os": "win7",
         "type": "manual",
         "upgrade64Bit": 1
-    }, headers={
-        "User-Agent": "Mozilla/5.0 (ZOOM.Win 10.0 x64)"
-    }).text
-    
-    version_pattern = r"Real-version': '(\d+\.\d+\.\d+\d+)"
-    version_match = re.search(version_pattern, release_notes_page)
-    if version_match:
-        version = version_match.group(1)
+    }
+    response = requests.post('https://zoom.us/releasenotes', headers=Zoom, data=data)
+    JSON = response.json()
+    Version = JSON['Real-version']
+    Urls = [
+        f"https://zoom.us/client/{Version}/ZoomInstallerFull.exe",
+        f"https://zoom.us/client/{Version}/ZoomInstallerFull.exe?archType=x64",
+        f"https://zoom.us/client/{Version}/ZoomInstallerFull.exe?archType=winarm64",
+        f"https://zoom.us/client/{Version}/ZoomInstallerFull.msi",
+        f"https://zoom.us/client/{Version}/ZoomInstallerFull.msi?archType=x64",
+        f"https://zoom.us/client/{Version}/ZoomInstallerFull.msi?archType=winarm64"
+    ]
+    if not version_verify(Version, id):
+        report_existed(id, Version)
+    elif do_list(id, Version, "verify"):
+        report_existed(id, Version)
     else:
-        print(f"Failed to find the version for {id}")
-        version = None
-    
-    urls = []
-    if version:
-        urls_pattern = rf'https://zoom\.us/client/{version}/ZoomInstallerFull\.exe'
-        urls_match = re.findall(urls_pattern, release_notes_page)
-        urls = [url for url in urls_match if "archType" not in url]  # Exclude architecture-specific URLs
-    
-    if not version_verify(version, id):
-        report_existed(id, version)
-    elif do_list(id, version, "verify"):
-        report_existed(id, version)
-    else:
-        Commands.append((command(Komac, id, list_to_str(urls), version, GH_TOKEN), (id, version, "write")))
-    del version, urls, id
+        Commands.append((command(Komac, id, list_to_str(Urls), Version, GH_TOKEN), (id, Version, "write")))
+    del JSON, Urls, Version, id, Zoom, data
 
-# Add Zoom Outlook Plugin to Update List
-    id = "Zoom.OutlookPlugin"
-    
-    url = "https://us05web.zoom.us/product/version"
-    headers = {
+# Ajouter Zoom.OutlookPlugin_Pckgr à la liste de mise à jour
+    id = "Zoom.OutlookPlugin_Pckgr"
+    Zoom = {
         "User-Agent": "Mozilla/5.0 (ZOOM.Win 10.0 x64)",
         "ZM-CAP": "8300567970761955255,6445493618999263204"
     }
-    data = {"productName": "outlookplugin"}
-    response = requests.post(url, headers=headers, data=data)
-    
-    from google.protobuf.json_format import ParseDict
-    import google.protobuf.message
-    proto_message = google.protobuf.message.Message()
-    ParseDict(response.json(), proto_message)
-    
-    version = proto_message.get('10')
-    real_version = ".".join(version.split(".")[:3])
-    download_url = f"https://zoom.us/client/{version}/ZoomOutlookPluginSetup.msi"
-    
-    if not version_verify(version, id):
-        report_existed(id, version)
-    elif do_list(id, version, "verify"):
-        report_existed(id, version)
+    data = {
+        "productName": "outlookplugin"
+    }
+    response = requests.post('https://us05web.zoom.us/product/version', headers=Zoom, data=data)
+    JSON = response.json()
+    Version = JSON['10']
+    RealVersion = '.'.join(Version.split('.')[0:3])
+    Urls = [f"https://zoom.us/client/{Version}/ZoomOutlookPluginSetup.msi"]
+    if not version_verify(RealVersion, id):
+        report_existed(id, RealVersion)
+    elif do_list(id, RealVersion, "verify"):
+        report_existed(id, RealVersion)
     else:
-        Commands.append((command(Komac, id, download_url, real_version, GH_TOKEN), (id, real_version, "write")))
-    
-    del version, real_version, download_url, id
+        Commands.append((command(Komac, id, list_to_str(Urls), RealVersion, GH_TOKEN), (id, RealVersion, "write")))
+    del JSON, Urls, Version, RealVersion, id, Zoom, response, data
 
-# Add Foxit.FoxitReader to Update List
-    id = "Foxit.FoxitReader"
-    
-    # Fetch the version information
-    url = "https://www.foxit.com/portal/download/getdownloadform.html?retJson=1&platform=Windows&product=Foxit-Enterprise-Reader&formId=pdf-reader-enterprise-register"
-    response = requests.get(url)
-    json_data = response.json()
-    
-    # Extract the version and download URLs
-    version = json_data["package_info"]["version"][0]
-    exe_url = f"https://cdn01.foxitsoftware.com{json_data['package_info']['down']}"
-    inno_url = f"https://cdn01.foxitsoftware.com{json_data['package_info']['down'].replace('.exe', '_Prom.exe')}"
-    
-    # Check if the version already exists or is in the list
-    if not version_verify(version, id):
-        report_existed(id, version)
-    elif do_list(id, version, "verify"):
-        report_existed(id, version)
+# Add Foxit.FoxitReader_Pckgr to Update List
+    id = "Foxit.FoxitReader_Pckgr"
+    response = requests.get('https://www.foxit.com/portal/download/getdownloadform.html?retJson=1&platform=Windows&product=Foxit-Enterprise-Reader&formId=pdf-reader-enterprise-register')
+    JSON = response.json()
+    Version = JSON['package_info']['version'][0]
+    Urls = [
+        'https://cdn01.foxitsoftware.com' + JSON['package_info']['down'],
+        'https://cdn01.foxitsoftware.com' + JSON['package_info']['down'].replace('.exe', '_Prom.exe')
+    ]
+    if not version_verify(Version, id):
+        report_existed(id, Version)
+    elif do_list(id, Version, "verify"):
+        report_existed(id, Version)
     else:
-        urls = [exe_url, inno_url]
-        Commands.append((command(Komac, id, list_to_str(urls), version, GH_TOKEN), (id, version, "write")))
-    
-    del url, response, json_data, version, exe_url, inno_url, id
+        Commands.append((command(Komac, id, list_to_str(Urls), Version, GH_TOKEN), (id, Version, "write")))
+    del JSON, Urls, Version, id, response
+
 
     # Updating
     if not debug:
