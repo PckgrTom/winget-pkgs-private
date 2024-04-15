@@ -1,0 +1,24 @@
+# Created using wingetcreate 1.6.1.0
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.6.0.schema.json
+
+PackageIdentifier: Jabra.Direct_Pckgr
+PackageVersion: 6.14.08801
+MinimumOSVersion: 7.0.0.0
+InstallerType: exe
+Scope: machine
+InstallModes:
+- interactive
+- silent
+- silentWithProgress
+InstallerSwitches:
+  Silent: /install /quiet /norestart
+  SilentWithProgress: /install /quiet /norestart
+  Custom: /install /quiet /norestart
+UpgradeBehavior: install
+ProductCode: '{9373945f-7ab1-465c-ab7c-987f25ff5323}'
+Installers:
+- Architecture: x86
+  InstallerUrl: https://jabraxpressonlineprdstor.blob.core.windows.net/jdo/JabraDirectSetup.exe
+  InstallerSha256: 613EC647755FF2B1406A6C448D7F44F6BE95C394904A178183B28D06A61C3C1A
+ManifestType: installer
+ManifestVersion: 1.6.0
