@@ -1,0 +1,31 @@
+# Created using wingetcreate 1.6.1.0
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.6.0.schema.json
+
+PackageIdentifier: BlenderFoundation.Blender_Pckgr
+PackageVersion: 4.1.1
+InstallerLocale: en-US
+InstallerType: wix
+Scope: machine
+InstallModes:
+- interactive
+- silent
+- silentWithProgress
+UpgradeBehavior: install
+FileExtensions:
+- 3ds
+- fbx
+- glb
+- gltf
+- obj
+- ply
+- stl
+ProductCode: '{1ADD9FE1-B5B3-4B8C-9F62-D63F0D761D39}'
+AppsAndFeaturesEntries:
+- DisplayName: blender
+  UpgradeCode: '{4F566C54-8D01-57FE-A6F1-8007DF230575}'
+Installers:
+- Architecture: x64
+  InstallerUrl: https://download.blender.org/release/Blender4.1/blender-4.1.1-windows-x64.msi
+  InstallerSha256: D53C619E9AF77D0E4F360559A481F70B93E37FB12DAFC482DEEEB6CBB7AA5EC7
+ManifestType: installer
+ManifestVersion: 1.6.0
