@@ -1,0 +1,96 @@
+# Created using wingetcreate 1.6.1.0
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.6.0.schema.json
+
+PackageIdentifier: Zoom.Zoom_Pckgr
+PackageVersion: 6.0.4.38135
+UpgradeBehavior: install
+Protocols:
+- zoom
+- zoommtg
+FileExtensions:
+- zoommtg
+- zoomphonecall
+Installers:
+- Architecture: x86
+  InstallerType: exe
+  Scope: user
+  InstallerUrl: https://zoom.us/client/6.0.4.38135/ZoomInstallerFull.exe
+  InstallerSha256: 78A15CE83C4BF62646F85874C5107E74C9DD6C9826228DB27B7B3E87D0F857F6
+  InstallModes:
+  - interactive
+  - silent
+  InstallerSwitches:
+    Silent: /silent
+    SilentWithProgress: /silent
+  ProductCode: ZoomUMX
+  AppsAndFeaturesEntries:
+  - Publisher: Zoom Video Communications, Inc.
+    DisplayVersion: 5.17.10 (33775)
+    ProductCode: ZoomUMX
+- Architecture: x64
+  InstallerType: exe
+  Scope: user
+  InstallerUrl: https://zoom.us/client/6.0.4.38135/ZoomInstallerFull.exe?archType=x64
+  InstallerSha256: E0F31FE28223B5BD22CE01C6BC1D3A4D3E030B9DC3C98440D11D72E67FDAA453
+  InstallModes:
+  - interactive
+  - silent
+  InstallerSwitches:
+    Silent: /silent
+    SilentWithProgress: /silent
+  ProductCode: ZoomUMX
+  AppsAndFeaturesEntries:
+  - Publisher: Zoom Video Communications, Inc.
+    DisplayVersion: 5.17.10 (33775)
+    ProductCode: ZoomUMX
+- Architecture: arm64
+  InstallerType: exe
+  Scope: user
+  InstallerUrl: https://zoom.us/client/6.0.4.38135/ZoomInstallerFull.exe?archType=winarm64
+  InstallerSha256: 8D13A114C2F85F83E61E557D6BE2429916A518EDA5A9072AA45446EFAE5DF3A4
+  InstallModes:
+  - interactive
+  - silent
+  InstallerSwitches:
+    Silent: /silent
+    SilentWithProgress: /silent
+  ProductCode: ZoomUMX
+  AppsAndFeaturesEntries:
+  - Publisher: Zoom Video Communications, Inc.
+    DisplayVersion: 5.17.10 (33775)
+    ProductCode: ZoomUMX
+- Architecture: x86
+  InstallerType: msi
+  Scope: machine
+  InstallerUrl: https://zoom.us/client/6.0.4.38135/ZoomInstallerFull.msi
+  InstallerSha256: 2497DAFCFC6E2CD64D44F346FEFF9B44ABAEAFA0843E4AE6A919FBB7B5409443
+  ProductCode: '{E35B1C56-B1C8-4D47-85B7-E4409EEF077F}'
+  AppsAndFeaturesEntries:
+  - DisplayName: Zoom (32-bit)
+    DisplayVersion: 5.17.10.33775
+    ProductCode: '{78226EBD-E927-40BC-A53A-DC9BF255C3B1}'
+    UpgradeCode: '{C819B794-A45C-4F27-9860-0C86492A52CC}'
+- Architecture: x64
+  InstallerType: msi
+  Scope: machine
+  InstallerUrl: https://zoom.us/client/6.0.4.38135/ZoomInstallerFull.msi?archType=x64
+  InstallerSha256: 62B261BF521AAD81FF8E204B56423FEEAB5D325854EB269DD140DEFB6CE32EBE
+  ProductCode: '{57D6B477-1B0C-4C4B-8479-A89ACFDFD875}'
+  AppsAndFeaturesEntries:
+  - DisplayName: Zoom (64-bit)
+    DisplayVersion: 5.17.10.33775
+    ProductCode: '{CEDE24AC-2B05-4B73-9604-93E8EF2398E9}'
+    UpgradeCode: '{C819B794-A45C-4F27-9860-0C86492A52CC}'
+- Architecture: arm64
+  InstallerType: msi
+  Scope: machine
+  InstallerUrl: https://zoom.us/client/6.0.4.38135/ZoomInstallerFull.msi?archType=winarm64
+  InstallerSha256: 24E7A9D0E78AF6FB584EAF2EE39CF5BBF92B2C67C28B90D90DB93E84DC1FF2D3
+  ProductCode: '{AE574676-9CDE-4B30-AB6E-8E2EA186B7B6}'
+  AppsAndFeaturesEntries:
+  - DisplayName: Zoom (ARM64)
+    DisplayVersion: 5.17.10.33775
+    ProductCode: '{AB4AAAA7-9E5C-44DA-B25B-59AB2475EB93}'
+    UpgradeCode: '{C819B794-A45C-4F27-9860-0C86492A52CC}'
+ManifestType: installer
+ManifestVersion: 1.6.0
