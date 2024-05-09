@@ -1,0 +1,26 @@
+# Created using wingetcreate 1.6.1.0
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.installer.1.6.0.schema.json
+
+PackageIdentifier: GitHub.cli_Pckgr
+PackageVersion: 2.49.1
+InstallerLocale: en-US
+Platform:
+- Windows.Desktop
+InstallerType: wix
+Scope: machine
+InstallModes:
+- interactive
+- silent
+- silentWithProgress
+UpgradeBehavior: install
+Commands:
+- gh
+ProductCode: '{557A30EB-B787-41A7-9AF5-5B86C7F92580}'
+AppsAndFeaturesEntries:
+- UpgradeCode: '{8CFB9531-B959-4E1B-AA2E-4AF0FFCC4AF4}'
+Installers:
+- Architecture: x64
+  InstallerUrl: https://github.com/cli/cli/releases/download/v2.49.1/gh_2.49.1_windows_amd64.msi
+  InstallerSha256: F24B1503B0E99D064FBC4343BCF73AA1AF115FF429EE6F0380D58A0C0B477C52
+ManifestType: installer
+ManifestVersion: 1.6.0
