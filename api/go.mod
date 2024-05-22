@@ -2,7 +2,7 @@ module github.com/vedantmgoyal2009/winget-pkgs-pckgr
 
 go 1.21
 
-require sigs.k8s.io/kustomize/kyaml v0.17.0
+require sigs.k8s.io/kustomize/kyaml v0.17.1
 
 require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc // indirect
